@@ -1,0 +1,11 @@
+{
+  "users": {
+    "username": "",
+    "password": "",
+    "email": "",
+
+    "wishlist": [],
+
+    "cart": []
+  }
+}
