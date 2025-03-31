@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+      }
+      .product-images {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 10px;
+      }
+      .quantity button {
+        color: #FAFAFA;
+        background-color: #db4444;
+        border: none;
+        font-size: 20pt;
+        width: 40px;
+        border-radius: 5px;
+      }
+      .quantity input {
+        width: 50px;
+        height: 28px;
+        border-radius: 5px;
+        text-align: center;
+      }
+      .quantity {
+        display: flex;
+      }
+      .add-to-cart{
+        color: #fafafa;
+        margin-top: 30px;
+        padding: 15px;
+        background-color: #db4444;
+        border-radius: 5px;
+        border: none;
+        font-size: 14pt;
+      }
+      .quantity-and-stars{
+        display: flex;
+        gap: 50px;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="product-images">
+        <div class="main-image">
+          <img src="1.jpg" alt="" />
+        </div>
+        <div class="side-images">
+          <img src="2.jpg" alt="" height="100px" />
+          <img src="3.jpg" alt="" height="100px" />
+          <img src="4.jpg" alt="" height="100px" />
+          <img src="4.jpg" alt="" height="100px" />
+        </div>
+      </div>
+
+      <div class="details">
+        <div>
+          <h2>Title</h2>
+          <hr />
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam
+            corporis in incidunt optio labore placeat!
+          </p>
+          <hr />
+          <h4>price $</h4>
+        </div>
+
+        <div class="quantity-and-stars">
+            <div class="quantity">
+              <label for="quantity"></label>
+              <button id="decrease" type="button">-</button>
+              <input id="quantity" type="text" name="quantity" value="1" />
+              <button id="increase" type="button">+</button>
+            </div>
+            <div class="stars">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 24" width="120" height="24">
+                    <g fill="#rgb(35, 34, 34)">
+                        <path d="M12 0l3.09 6.26L22 7.27l-5 4.87L18.18 20 12 16.9 5.82 20 7 12.14 2 7.27l6.91-1.01L12 0z"></path>
+                        <path d="M36 0l3.09 6.26L46 7.27l-5 4.87L42.18 20 36 16.9 29.82 20 31 12.14 26 7.27l6.91-1.01L36 0z"></path>
+                        <path d="M60 0l3.09 6.26L70 7.27l-5 4.87L66.18 20 60 16.9 53.82 20 55 12.14 50 7.27l6.91-1.01L60 0z"></path>
+                        <path d="M84 0l3.09 6.26L94 7.27l-5 4.87L90.18 20 84 16.9 77.82 20 79 12.14 74 7.27l6.91-1.01L84 0z"></path>
+                        <path d="M108 0l3.09 6.26L118 7.27l-5 4.87L114.18 20 108 16.9 101.82 20 103 12.14 98 7.27l6.91-1.01L108 0z"></path>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+
+        <button type="button" class="add-to-cart">Add to cart</button>
+      </div>
+    </div>
+
+    <script src="product.js"></script>
+  </body>
+</html>
