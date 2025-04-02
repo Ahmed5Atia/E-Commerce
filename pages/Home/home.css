@@ -402,12 +402,12 @@ body {
   align-items: center;
   margin-top: 10px;
 }
-.star-rate {
-  width: 80px;
-
-  background: url("stars.png") no-repeat center;
-  background-size: contain;
+.rate i {
+  color: #ffad33;
+  font-size: 18px;
+  margin-right: 2px;
 }
+
 .num-rate {
   font-size: 14px;
   color: #555;
