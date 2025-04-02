@@ -68,10 +68,9 @@ function getData() {
       var data = JSON.parse(res);
 
       var categories = data.map((product) => product.category);
-
       const filterCategories = [...new Set(categories)];
-      var div = document.getElementById("category");
 
+      var div = document.getElementById("category");
       div.innerHTML = "";
 
       var line = document.createElement("div");
@@ -89,11 +88,106 @@ function getData() {
       div.appendChild(ul);
       div.appendChild(line);
 
+      // =====================
+
+      var carousel = document.getElementById("carousel");
+      carousel.innerHTML = "";
+
+      data.forEach((product) => {
+        let card = document.createElement("div");
+        card.classList.add("card");
+
+        card.addEventListener("click", function () {
+          // الانتقال إلى صفحة المنتج مع إضافة معرف المنتج في الرابط
+          window.location.href = `../product/product.html?id=${product.id}`;
+        });
+
+        let cardImg = document.createElement("div");
+        cardImg.classList.add("card-img");
+
+        let img = document.createElement("img");
+        img.src = product.image;
+        img.alt = product.title;
+
+        let favorite = document.createElement("span");
+        favorite.classList.add("favorite");
+        favorite.innerHTML = '<i class="fa-solid fa-heart"></i>';
+
+        let offer = document.createElement("span");
+        offer.classList.add("offer");
+        offer.innerHTML = "20%";
+
+        let addToCart = document.createElement("button");
+        addToCart.classList.add("add-to-card");
+        addToCart.textContent = "Add To Cart";
+
+        cardImg.appendChild(favorite);
+        cardImg.appendChild(offer);
+        cardImg.appendChild(img);
+        cardImg.appendChild(addToCart);
+
+        let cardBody = document.createElement("div");
+        cardBody.classList.add("card-body");
+
+        let title = document.createElement("p");
+        title.classList.add("card-title");
+        title.textContent = product.title;
+
+        let priceContainer = document.createElement("div");
+        priceContainer.classList.add("card-price");
+
+        let price = document.createElement("p");
+        price.classList.add("price");
+        price.textContent = `$${product.price.toFixed(2)}`;
+
+        let priceOffer = document.createElement("span");
+        priceOffer.classList.add("card-price-offer");
+        priceOffer.textContent = `$${(product.price * 1.2).toFixed(2)}`;
+
+        priceContainer.appendChild(price);
+        priceContainer.appendChild(priceOffer);
+
+        let rate = document.createElement("div");
+        rate.classList.add("rate");
+
+        let fullStars = Math.floor(product.rating.rate);
+        let hasHalfStar = product.rating.rate % 1 !== 0;
+        let emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        for (let i = 0; i < fullStars; i++) {
+          rate.innerHTML += '<i class="fa-solid fa-star"></i>';
+        }
+
+        if (hasHalfStar) {
+          rate.innerHTML += '<i class="fa-solid fa-star-half-alt"></i>';
+        }
+
+        for (let i = 0; i < emptyStars; i++) {
+          rate.innerHTML += '<i class="fa-regular fa-star"></i>';
+        }
+
+        let numRate = document.createElement("span");
+        numRate.classList.add("num-rate");
+        numRate.textContent = `(${product.rating.count})`;
+
+        rate.appendChild(numRate);
+
+        cardBody.appendChild(title);
+        cardBody.appendChild(priceContainer);
+        cardBody.appendChild(rate);
+
+        card.appendChild(cardImg);
+        card.appendChild(cardBody);
+
+        carousel.appendChild(card);
+      });
+
       console.log(filterCategories);
     }
   };
   xhr.send();
 }
+
 getData();
 
 //today's section ========================================================
@@ -126,3 +220,27 @@ var x = setInterval(function () {
     document.getElementById("time-day").innerHTML = "EXPIRED";
   }
 }, 1000);
+
+/* ========================================================= */
+/* second section today's sales section */
+//carousel card for today's sale
+
+const carousel = document.getElementById("carousel");
+const prev = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+let scrollAmount = 0;
+const scrollStep = 270;
+
+nextBtn.addEventListener("click", () => {
+  if (scrollAmount < carousel.scrollWidth - carousel.clientWidth) {
+    scrollAmount += scrollStep;
+    carousel.style.transform = `translateX(-${scrollAmount}px)`;
+  }
+});
+
+prev.addEventListener("click", () => {
+  if (scrollAmount > 0) {
+    scrollAmount -= scrollStep;
+    carousel.style.transform = `translateX(-${scrollAmount}px)`;
+  }
+});

@@ -29,6 +29,10 @@
     </section>
 
     <section id="second-section">
+      <div class="card-carousel">
+        <div class="carousel" id="carousel"></div>
+      </div>
+
       <div class="todays">
         <div class="today">
           <div id="for-style"></div>
@@ -58,15 +62,14 @@
             </div>
           </div>
           <div id="carousel-control">
-            <a class="carousel-arrow" onclick="previous()">
+            <a class="carousel-arrow" id="prev">
               <i class="fa-solid fa-chevron-left"></i>
             </a>
-            <a class="carousel-arrow" onclick="next()">
+            <a class="carousel-arrow" id="next">
               <i class="fa-solid fa-chevron-right"></i>
             </a>
           </div>
         </div>
-        <div id="today-data"></div>
       </div>
       <div class="btn-all-productes">
         <button class="view-all-products">View All Products</button>

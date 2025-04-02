@@ -1,11 +1,13 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
-  padding: 0 12px;
-  margin: 0;
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
-
+body {
+  margin: 10px;
+  margin-left: 15px;
+}
 #first-section {
   display: grid;
   grid-template-columns: 1fr 4fr;
@@ -288,4 +290,126 @@ body {
   font-size: 20px;
   height: 45px;
   width: 288px;
+}
+
+/* card stylee */
+.card-carousel {
+  width: 100%;
+  overflow: hidden;
+  margin: auto;
+  position: relative;
+  margin-bottom: 2%;
+  padding-left: 15px;
+}
+.carousel {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+.card {
+  min-width: 270px;
+  height: 360px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+.card-img {
+  position: relative;
+  text-align: center;
+  background: #f9f9f9;
+  padding: 5px;
+}
+.card-img img {
+  width: 100%;
+  height: 185px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+.offer {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #db4444;
+  color: #ffff;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.favorite {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 25px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.favorite:hover {
+  color: red;
+}
+.add-to-card {
+  background: #000000;
+  color: #ffff;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+.add-to-card:hover {
+  background: #e68900;
+}
+.card-body {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 15px;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.card-price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+.price {
+  font-size: 18px;
+  color: #db4444;
+  font-weight: bold;
+}
+.price-offer {
+  font-size: 14px;
+  color: #777;
+  text-decoration: line-through;
+}
+.rate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+.star-rate {
+  width: 80px;
+
+  background: url("stars.png") no-repeat center;
+  background-size: contain;
+}
+.num-rate {
+  font-size: 14px;
+  color: #555;
+  margin-left: 5px;
 }
