@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./cart.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="cartTable">
+      <div class="container">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+          <tfoot>
+            <td colspan="2" class="return">
+              <button id="returnToHome">return to shop</button>
+            </td>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <div class="cuponTotal">
+      <div class="container">
+        <div class="underTable">
+          <div>
+            <input type="text" name="" id="code" placeholder="Enter Code" />
+            <button>Apply Copoun</button>
+          </div>
+          <div>
+            <div class="cart-total-box">
+              <div class="total-container">
+                <h3>Cart Total: $<span id="cart-total">0.00</span></h3>
+              </div>
+              <button class="checkout-btn" id="cart-total" onclick="checkout()">
+                Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./cart.js"></script>
+  </body>
+</html>

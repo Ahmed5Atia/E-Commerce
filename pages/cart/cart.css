@@ -1,0 +1,125 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+table {
+  margin: auto;
+  border-spacing: 0 20px;
+}
+.container {
+  width: 80%;
+  margin: auto;
+}
+.imageTitle p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 150px;
+  display: block;
+}
+.imageTitle {
+  display: flex;
+  column-gap: 5px;
+  line-clamp: 1;
+}
+tbody .image {
+  margin-left: 10px;
+  width: 30px;
+  height: 30px;
+}
+tbody img {
+  width: 100%;
+  height: 100%;
+}
+tbody td input {
+  width: 2rem;
+}
+thead tr {
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 10px;
+}
+tbody tr {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 10px;
+}
+th,
+td {
+  margin-block: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 15rem;
+  text-align: center;
+}
+table tfoot button {
+  background-color: white;
+  padding-inline: 30px;
+  padding-block: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.return {
+  text-align: start;
+}
+
+table tfoot button:hover {
+  background-color: #e07575;
+}
+.delete-btn {
+  background-color: #db4444; /* Red background */
+  color: white; /* White text */
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.underTable {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#code {
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+.delete-btn:hover {
+  background-color: #b83232; /* Darker red on hover */
+}
+.underTable button {
+  background-color: #db4444;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cart-total-box {
+  padding: 20px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  right: 20px;
+  bottom: 20px;
+  text-align: center;
+}
+
+.total-container h3 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Checkout button styling */
+
+.checkout-btn:hover {
+  background-color: #a0bce0;
+}
