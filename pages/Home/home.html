@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="./home.css" />
     <link rel="icon" type="image/png" href="./shopping-cart-solid.png" />
@@ -28,6 +25,51 @@
         ></a>
 
         <div id="dots-container"></div>
+      </div>
+    </section>
+
+    <section id="second-section">
+      <div class="todays">
+        <div class="today">
+          <div id="for-style"></div>
+          <p>Today's</p>
+        </div>
+        <div class="flash-sales">
+          <p>Flash Sales</p>
+          <div id="time-day">
+            <div class="time-unit">
+              <label>Days</label>
+              <p id="days"></p>
+            </div>
+
+            <div class="time-unit">
+              <label>Hours</label>
+              <p id="hours"></p>
+            </div>
+
+            <div class="time-unit">
+              <label>Minutes</label>
+              <p id="minutes"></p>
+            </div>
+
+            <div class="time-unit">
+              <label>Seconds</label>
+              <p id="seconds"></p>
+            </div>
+          </div>
+          <div id="carousel-control">
+            <a class="carousel-arrow" onclick="previous()">
+              <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <a class="carousel-arrow" onclick="next()">
+              <i class="fa-solid fa-chevron-right"></i>
+            </a>
+          </div>
+        </div>
+        <div id="today-data"></div>
+      </div>
+      <div class="btn-all-productes">
+        <button class="view-all-products">View All Products</button>
       </div>
     </section>
 
