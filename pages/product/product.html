@@ -3,18 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title id="page-title"></title>
     <style>
       .container {
         display: flex;
         justify-content: center;
         gap: 30px;
+        flex-wrap: wrap;
       }
-      .product-images {
+      .details {
         display: flex;
-        flex-flow: column nowrap;
-        gap: 10px;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 600px;
       }
+      .main-image {
+        max-width: 600px;
+        max-height: 500px;
+        border: 1px solid;
+        border-radius: 20px;
+        box-shadow: 10px 10px 5px #7a7676;
+        padding: 20px;
+      }
+      #main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 20px;
+      }
+
       .quantity button {
         color: #fafafa;
         background-color: #db4444;
@@ -22,6 +40,11 @@
         font-size: 20pt;
         width: 40px;
         border-radius: 5px;
+        cursor: pointer;
+      }
+      .quantity button:hover,
+      .add-to-cart:hover {
+        background-color: #b83636;
       }
       .quantity input {
         width: 50px;
@@ -40,48 +63,40 @@
         border-radius: 5px;
         border: none;
         font-size: 14pt;
+        cursor: pointer;
       }
       .quantity-and-stars {
         display: flex;
         gap: 50px;
         align-items: center;
       }
-      .stars{
+      .stars {
         display: flex;
-        gap: 40px;
+        gap: 10px; 
         align-items: center;
         border: 2px solid;
+        border-radius: 10px; 
         padding: 10px;
+        background-color: #f9f9f9;
       }
-      #rating{
+      #rating {
         font-size: 20pt;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="product-images">
-        <div class="main-image">
-          <img src="1.jpg" alt="" />
-        </div>
-        <div class="side-images">
-          <img src="2.jpg" alt="" height="100px" />
-          <img src="3.jpg" alt="" height="100px" />
-          <img src="4.jpg" alt="" height="100px" />
-          <img src="4.jpg" alt="" height="100px" />
-        </div>
+      <div class="main-image">
+        <img id="main-image" src="" alt="" />
       </div>
 
       <div class="details">
-        <div>
-          <h2>Title</h2>
+        <div class="text-details">
+          <h2 id="title"></h2>
           <hr />
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam
-            corporis in incidunt optio labore placeat!
-          </p>
+          <p id="description"></p>
           <hr />
-          <h4>price $</h4>
+          <h3 id="price"></h3>
         </div>
 
         <div class="quantity-and-stars">
@@ -91,6 +106,7 @@
             <input id="quantity" type="text" name="quantity" value="1" />
             <button id="increase" type="button" onclick="increase()">+</button>
           </div>
+
           <div class="stars">
             <svg
               xmlns="http://www.w3.org/2000/svg"

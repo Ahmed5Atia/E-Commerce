@@ -307,7 +307,7 @@ body {
 }
 .card {
   min-width: 270px;
-  height: 360px;
+  height: 370px;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -327,7 +327,7 @@ body {
 }
 .card-img img {
   width: 100%;
-  height: 185px;
+  height: 205px;
   border-radius: 5px;
   margin-bottom: 5px;
 }
@@ -383,7 +383,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+
   gap: 10px;
 }
 .price {
