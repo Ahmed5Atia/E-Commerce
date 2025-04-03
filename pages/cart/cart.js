@@ -1,6 +1,9 @@
 let cartItems = document.getElementById("tableBody");
 let cartIds = new XMLHttpRequest();
-
+let returnToHome=document.getElementById("returnToHome");
+returnToHome.addEventListener("click",()=>{
+  window.location.href="../Home/home.html"
+})
 cartIds.open("GET", "/project.JSON", true);
 cartIds.send();
 
@@ -8,10 +11,9 @@ cartIds.addEventListener("loadend", () => {
   let id = JSON.parse(cartIds.response);
   let items = id.users[0].cart;
 
-  // Initialize the total variable
   let total = 0;
 
-  items.forEach((item, index) => {
+  items.forEach((item) => {
     let xml = new XMLHttpRequest();
     xml.open("GET", `https://fakestoreapi.com/products/${item}`, true);
     xml.send();
@@ -19,79 +21,103 @@ cartIds.addEventListener("loadend", () => {
     xml.addEventListener("loadend", () => {
       let data = JSON.parse(xml.response);
       let price = data.price;
+      let initialSubtotal = price * 1;
 
-      // Calculate the initial subtotal
-      let initialSubtotal = price * 1;  // Default to 1 quantity for now
-
-      // Update the cart with new row
-      cartItems.innerHTML += `
-        <tr>
-          <td>
-            <div class="imageTitle">
-              <div class="image">
-                <img src="${data.image}" alt="" />
-              </div>
-              <p>${data.title}</p>
-            </div>
-          </td>
-          <td>
-            <p class="price">${price}$</p>
-          </td>
-          <td>
-            <input type="number" class="quantity" data-price="${price}" data-item="${data.id}" min="1" value="1"/>
-          </td>
-          <td class="subtotal">${initialSubtotal}$</td>
-        </tr>`;
-
-      // Recalculate the total as items are added
       total += initialSubtotal;
-      
-      // Update the total dynamically after each item is added
-      document.getElementById('cart-total').textContent = total.toFixed(2);
 
-      // Attach event listeners to the quantity inputs for updating subtotals
+      // Update the total dynamically
+      updateCartTotal(total);
+
+      // Insert row with delete button
+      let row = document.createElement("tr");
+      row.innerHTML = `
+        <td>
+          <div class="imageTitle">
+            <div class="image">
+              <img src="${data.image}" alt="" />
+            </div>
+            <p>${data.title}</p>
+          </div>
+        </td>
+        <td>
+          <p class="price">${price}$</p>
+        </td>
+        <td>
+          <input type="number" class="quantity" data-price="${price}" min="1" value="1"/>
+        </td>
+        <td class="subtotal">${initialSubtotal}$</td>
+        <td>
+          <button class="delete-btn" data-id="${item}">X</button>
+        </td>`;
+
+      cartItems.appendChild(row);
+
+      // Attach event listeners after adding items
       attachEventListeners();
     });
   });
 });
 
-// Function to update the subtotal and cart total dynamically
+// Function to update the cart total
+function updateCartTotal(total) {
+  document.getElementById("cart-total").textContent = total.toFixed(2);
+}
+
+// Function to update subtotal and cart total dynamically
 function updateSubtotal(event) {
-  let quantityInput = event.target;
-  let price = parseFloat(quantityInput.getAttribute('data-price'));
-  let quantity = parseInt(quantityInput.value);
-  let subtotalCell = quantityInput.closest('tr').querySelector('.subtotal');
-  
-  // Update the subtotal for this item
+  let input = event.target;
+  let price = parseFloat(input.getAttribute("data-price"));
+  let quantity = parseInt(input.value);
+  let subtotalCell = input.closest("tr").querySelector(".subtotal");
+
   let subtotal = price * quantity;
   subtotalCell.textContent = `${subtotal.toFixed(2)}$`;
 
-  // Recalculate and update the cart total
   recalculateCartTotal();
 }
 
-// Function to recalculate the total for all items
+// Function to recalculate the cart total
 function recalculateCartTotal() {
   let total = 0;
-  let subtotals = document.querySelectorAll('.subtotal');
-
-  subtotals.forEach(subtotal => {
-    total += parseFloat(subtotal.textContent.replace('$', ''));
+  document.querySelectorAll(".subtotal").forEach((subtotal) => {
+    total += parseFloat(subtotal.textContent.replace("$", ""));
   });
 
-  // Update the total in the cart total box
-  document.getElementById('cart-total').textContent = total.toFixed(2);
+  updateCartTotal(total);
 }
 
-// Attach event listeners to quantity inputs after the table is generated
+// Function to remove item from the cart
+function deleteItem(event) {
+  if (event.target.classList.contains("delete-btn")) {
+    let row = event.target.closest("tr");
+    let subtotal = parseFloat(
+      row.querySelector(".subtotal").textContent.replace("$", "")
+    );
+    row.remove();
+
+    // Update the total after deleting
+    let total = parseFloat(document.getElementById("cart-total").textContent);
+    total -= subtotal;
+    updateCartTotal(total);
+
+    // Remove from JSON file (simulated)
+    removeFromJson(event.target.getAttribute("data-id"));
+  }
+}
+
+// Function to remove the item from project.JSON (simulated here)
+function removeFromJson(itemId) {
+  console.log(`Removing item ID: ${itemId} from JSON`);
+}
+
 function attachEventListeners() {
-  let quantityInputs = document.querySelectorAll('.quantity');
-  quantityInputs.forEach(input => {
-    input.addEventListener('input', updateSubtotal);
+  document.querySelectorAll(".quantity").forEach((input) => {
+    input.addEventListener("input", updateSubtotal);
   });
+
+  document.getElementById("tableBody").addEventListener("click", deleteItem);
 }
 
-// Checkout function
 function checkout() {
   alert("Proceeding to checkout!");
 }
