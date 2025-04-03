@@ -1,9 +1,9 @@
 let cartItems = document.getElementById("tableBody");
 let cartIds = new XMLHttpRequest();
-let returnToHome=document.getElementById("returnToHome");
-returnToHome.addEventListener("click",()=>{
-  window.location.href="../Home/home.html"
-})
+let returnToHome = document.getElementById("returnToHome");
+returnToHome.addEventListener("click", () => {
+  window.location.href = "../Home/home.html";
+});
 cartIds.open("GET", "/project.JSON", true);
 cartIds.send();
 
@@ -34,7 +34,7 @@ cartIds.addEventListener("loadend", () => {
         <td>
           <div class="imageTitle">
             <div class="image">
-              <img src="${data.image}" alt="" />
+              <img src="${data.image}" alt="" id="trans" />
             </div>
             <p>${data.title}</p>
           </div>

@@ -6,8 +6,10 @@
 
 table {
   margin: auto;
-  border-spacing: 0 20px;
+  margin-top: 5rem;
+  border-spacing: 0 5px;
 }
+
 .container {
   width: 80%;
   margin: auto;
@@ -21,13 +23,18 @@ table {
 }
 .imageTitle {
   display: flex;
+  align-items: center;
   column-gap: 5px;
   line-clamp: 1;
 }
 tbody .image {
   margin-left: 10px;
-  width: 30px;
-  height: 30px;
+  width: 60px;
+  height: 60px;
+  background-color: transparent;
+}
+#trans:hover {
+  background-color: transparent;
 }
 tbody img {
   width: 100%;
@@ -36,13 +43,15 @@ tbody img {
 tbody td input {
   width: 2rem;
 }
+
 thead tr {
-  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
-  box-shadow: 10px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px;
 }
 tbody tr {
-  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
-  box-shadow: 10px;
+  /* box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 10px; */
+  background-color: #7d818427;
 }
 th,
 td {
