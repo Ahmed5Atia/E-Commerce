@@ -1,19 +1,170 @@
-//carousel ===============================
+//function to render products in any section used it=============================================
+function renderProducts(data, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = data.map(createProductCard).join("");
+  addEventListeners(containerId);
+}
+
+// structre for card ======================================================================
+function createProductCard(product) {
+  return `
+    <div class="card" data-id="${product.id}">
+      <div class="card-img">
+        <span class="favorite"><i class="fa-solid fa-heart"></i></span>
+        <span class="offer">${product.discountPercentage.toFixed(2)}%</span>
+        <img src="${product.thumbnail}" alt="${product.title}">
+      </div>
+      <button class="add-to-cart" style="display: none;">Add To Cart</button>
+      <div class="card-body">
+        <p class="card-title">${product.title}</p>
+        <div class="card-price">
+          <p class="price">$${product.price.toFixed(2)}</p>
+          <span class="card-price-offer">$${(
+            product.price *
+            (1 + product.discountPercentage / 100)
+          ).toFixed(2)}</span>
+        </div>
+        <div class="rate">
+          ${generateStars(product.rating)} <!-- Use product.rating directly -->
+          <span class="num-rate">(${
+            product.rating
+          })</span> <!-- Show the number of reviews -->
+        </div>
+      </div>
+    </div>`;
+}
+
+// fuction to calculate star based on rate===================================================
+function generateStars(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  return `${'<i class="fa-solid fa-star"></i>'.repeat(fullStars)}
+          ${hasHalfStar ? '<i class="fa-solid fa-star-half-alt"></i>' : ""}
+          ${'<i class="fa-regular fa-star"></i>'.repeat(emptyStars)}`;
+}
+
+//event listeneres alll ==========================================================================
+function addEventListeners(containerId) {
+  document.querySelectorAll(`#${containerId} .card`).forEach((card) => {
+    const productId = card.dataset.id;
+    const addToCartBtn = card.querySelector(".add-to-cart");
+
+    card.querySelector(".card-img").addEventListener("click", () => {
+      window.location.href = `./pages/product/product.html?id=${productId}`;
+    });
+
+    card.querySelector(".card-body").addEventListener("click", () => {
+      window.location.href = `./pages/product/product.html?id=${productId}`;
+    });
+
+    card.addEventListener(
+      "mouseover",
+      () => (addToCartBtn.style.display = "block")
+    );
+    card.addEventListener(
+      "mouseleave",
+      () => (addToCartBtn.style.display = "none")
+    );
+
+    //"Add To Cart" event on click the button storge id in local storega as array of numbers===========================
+    addToCartBtn.addEventListener("click", () => {
+      const productId = card.dataset.id;
+      let storedProducts = JSON.parse(localStorage.getItem("productIds")) || [];
+      if (!storedProducts.includes(Number(productId))) {
+        storedProducts.push(Number(productId));
+      }
+      localStorage.setItem("productIds", JSON.stringify(storedProducts));
+    });
+  });
+}
+
+// get categorise list to used in function show list in ul and buttons =========================================
+function fetchCategories(callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://dummyjson.com/products/category-list", true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        try {
+          var categories = JSON.parse(xhr.responseText);
+          callback(categories);
+        } catch (error) {
+          console.error("Error parsing categories JSON:", error);
+        }
+      } else {
+        console.error("Error fetching categories:", xhr.status, xhr.statusText);
+      }
+    }
+  };
+  xhr.send();
+}
+
+// get profucts
+function fetchProductsFromAPI(callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://dummyjson.com/products?limit=100", true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        let data = JSON.parse(xhr.responseText);
+        if (data && Array.isArray(data.products)) {
+          callback(data.products);
+        } else {
+          console.error("Unexpected API response structure:", data);
+        }
+      } else {
+        console.error("Error fetching products:", xhr.statusText);
+      }
+    }
+  };
+  xhr.send();
+}
+
+// make rondom numbers to used in chooose some products based this number ===============================
+function getRandomIndexes(count, max) {
+  let randomIndexes = new Set();
+  while (randomIndexes.size < count) {
+    randomIndexes.add(Math.floor(Math.random() * max));
+  }
+  return Array.from(randomIndexes);
+}
+
+// choose products based random numbers===============================
+function getRandomProducts(products, count) {
+  if (!Array.isArray(products) || products.length === 0) {
+    console.error("Invalid product list.");
+    return [];
+  }
+  const randomIndexes = getRandomIndexes(count, products.length);
+  return randomIndexes.map((index) => products[index]);
+}
+
+// call two function for two section to display products based numers  ===========================
+fetchProductsFromAPI((products) => {
+  const randomTenProducts = getRandomProducts(products, 10);
+  specialProductList(randomTenProducts);
+
+  const randomTwentyProducts = getRandomProducts(products, 20);
+
+  carouselProduct(randomTwentyProducts);
+});
+
+// make carousel offer images have two buttons to navigate the images ================================
 let img = [
   "./images/2412GB0033_EG_SL_Levis_DesktopHerotator_1500x400_RTB_AR._CB537014394_.jpg",
   "./images/61g7uQmB4VL._SX3000_.jpg",
   "./images/61h3NfMkDhL._SX3000_.jpg",
   "./images/61g7uQmB4VL._SX3000_.jpg",
 ];
-
 let currentIndex = 0;
 let myCarousel = document.getElementById("myCarousel");
 
 function showImage(index) {
   currentIndex = (index + img.length) % img.length;
-
   myCarousel.style.backgroundImage = `url('${img[currentIndex]}')`;
-
   updateDots();
 }
 
@@ -29,6 +180,8 @@ setInterval(function () {
   next();
 }, 9000);
 
+//dots in carousel image ===============================================
+
 function createDots() {
   let dotsContainer = document.getElementById("dots-container");
   dotsContainer.innerHTML = "";
@@ -39,7 +192,7 @@ function createDots() {
     dotsContainer.appendChild(dot);
   });
 }
-
+// display dots based number of images ==========================================
 function updateDots() {
   let dots = document.getElementsByClassName("dot");
   for (let i = 0; i < dots.length; i++) {
@@ -55,145 +208,56 @@ function currentSlide(index) {
 createDots();
 showImage(0);
 
-///categories =========================================
-
-//get categories and show in list item
-
-function getData() {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://fakestoreapi.com/products", true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      var res = xhr.response;
-      var data = JSON.parse(res);
-
-      var categories = data.map((product) => product.category);
-      const filterCategories = [...new Set(categories)];
-
-      var div = document.getElementById("category");
-      div.innerHTML = "";
-
-      var line = document.createElement("div");
-      line.classList.add("line");
-
-      var ul = document.createElement("ul");
-      ul.style.paddingLeft = "0px";
-
-      filterCategories.forEach((value) => {
-        let li = document.createElement("li");
-        li.textContent = value;
-        ul.appendChild(li);
-      });
-
-      div.appendChild(ul);
-      div.appendChild(line);
-
-      // =====================
-
-      var carousel = document.getElementById("carousel");
-      carousel.innerHTML = "";
-
-      data.forEach((product) => {
-        let card = document.createElement("div");
-        card.classList.add("card");
-
-        card.addEventListener("click", function () {
-          // الانتقال إلى صفحة المنتج مع إضافة معرف المنتج في الرابط
-          window.location.href = `./pages/product/product.html?id=${product.id}`;
-        });
-
-        let cardImg = document.createElement("div");
-        cardImg.classList.add("card-img");
-
-        let img = document.createElement("img");
-        img.src = product.image;
-        img.alt = product.title;
-
-        let favorite = document.createElement("span");
-        favorite.classList.add("favorite");
-        favorite.innerHTML = '<i class="fa-solid fa-heart"></i>';
-
-        let offer = document.createElement("span");
-        offer.classList.add("offer");
-        offer.innerHTML = "20%";
-
-        let addToCart = document.createElement("button");
-        addToCart.classList.add("add-to-card");
-        addToCart.textContent = "Add To Cart";
-
-        cardImg.appendChild(favorite);
-        cardImg.appendChild(offer);
-        cardImg.appendChild(img);
-        cardImg.appendChild(addToCart);
-
-        let cardBody = document.createElement("div");
-        cardBody.classList.add("card-body");
-
-        let title = document.createElement("p");
-        title.classList.add("card-title");
-        title.textContent = product.title;
-
-        let priceContainer = document.createElement("div");
-        priceContainer.classList.add("card-price");
-
-        let price = document.createElement("p");
-        price.classList.add("price");
-        price.textContent = `$${product.price.toFixed(2)}`;
-
-        let priceOffer = document.createElement("span");
-        priceOffer.classList.add("card-price-offer");
-        priceOffer.textContent = `$${(product.price * 1.2).toFixed(2)}`;
-
-        priceContainer.appendChild(price);
-        priceContainer.appendChild(priceOffer);
-
-        let rate = document.createElement("div");
-        rate.classList.add("rate");
-
-        let fullStars = Math.floor(product.rating.rate);
-        let hasHalfStar = product.rating.rate % 1 !== 0;
-        let emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-        for (let i = 0; i < fullStars; i++) {
-          rate.innerHTML += '<i class="fa-solid fa-star"></i>';
-        }
-
-        if (hasHalfStar) {
-          rate.innerHTML += '<i class="fa-solid fa-star-half-alt"></i>';
-        }
-
-        for (let i = 0; i < emptyStars; i++) {
-          rate.innerHTML += '<i class="fa-regular fa-star"></i>';
-        }
-
-        let numRate = document.createElement("span");
-        numRate.classList.add("num-rate");
-        numRate.textContent = `(${product.rating.count})`;
-
-        rate.appendChild(numRate);
-
-        cardBody.appendChild(title);
-        cardBody.appendChild(priceContainer);
-        cardBody.appendChild(rate);
-
-        card.appendChild(cardImg);
-        card.appendChild(cardBody);
-
-        carousel.appendChild(card);
-      });
-
-      console.log(filterCategories);
-    }
-  };
-  xhr.send();
+//call function to display products in carousel products========================
+function carouselProduct(products) {
+  renderProducts(products, "carousel");
 }
 
-getData();
+///carousel control==============================================================
+const carousel = document.getElementById("carousel");
+const prev = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+let scrollAmount = 0;
+const scrollStep = 270;
 
-//today's section ========================================================
+nextBtn.addEventListener("click", () => {
+  if (scrollAmount < carousel.scrollWidth - carousel.clientWidth) {
+    scrollAmount += scrollStep;
+    carousel.style.transform = `translateX(-${scrollAmount}px)`;
+  }
+});
+
+prev.addEventListener("click", () => {
+  if (scrollAmount > 0) {
+    scrollAmount -= scrollStep;
+    carousel.style.transform = `translateX(-${scrollAmount}px)`;
+  }
+});
+
+///display categories on ul from prevous function ajax to get all categories=======================
+function renderCategoryList(categories, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = "";
+  const ul = document.createElement("ul");
+  const categoryFragment = document.createDocumentFragment();
+
+  categories.forEach((category) => {
+    let li = document.createElement("li");
+    li.textContent = category;
+    categoryFragment.appendChild(li);
+  });
+
+  ul.appendChild(categoryFragment);
+  container.appendChild(ul);
+}
+// call function get categories====================================================
+fetchCategories((categories) => renderCategoryList(categories, "category"));
+
+//countdown in carousel product section ==============================================
 let now = new Date();
 let startCountDate = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
-
 let countDownDate = new Date(
   startCountDate.getTime() + 1 * 24 * 60 * 60 * 1000
 ).getTime();
@@ -221,26 +285,45 @@ var x = setInterval(function () {
   }
 }, 1000);
 
-/* ========================================================= */
-/* second section today's sales section */
-//carousel card for today's sale
+//display categories on buttons  from prevous function ajax to get all categories=====================
+function renderCategoryButtons(categories, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-const carousel = document.getElementById("carousel");
-const prev = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
-let scrollAmount = 0;
-const scrollStep = 270;
+  container.innerHTML = "";
 
-nextBtn.addEventListener("click", () => {
-  if (scrollAmount < carousel.scrollWidth - carousel.clientWidth) {
-    scrollAmount += scrollStep;
-    carousel.style.transform = `translateX(-${scrollAmount}px)`;
-  }
+  categories.forEach((category) => {
+    let button = document.createElement("button");
+    button.classList.add("category-btn");
+    button.textContent = category;
+    ////call function category
+    button.onclick = () => fetchProducts(category);
+    container.appendChild(button);
+  });
+}
+
+// fire function to display buttons =================================================
+fetchCategories((categories) => {
+  renderCategoryButtons(categories, "products-category");
 });
 
-prev.addEventListener("click", () => {
-  if (scrollAmount > 0) {
-    scrollAmount -= scrollStep;
-    carousel.style.transform = `translateX(-${scrollAmount}px)`;
-  }
-});
+// give items based category on click to any buttons form category form prev function ========================
+function fetchProducts(category = "mobile-accessories") {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", `https://dummyjson.com/products/category/${category}`, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      let response = JSON.parse(xhr.responseText);
+      let products = response.products;
+
+      renderProducts(products, "product-by-category");
+    }
+  };
+  xhr.send();
+}
+fetchProducts();
+
+// function to display random product ================================
+function specialProductList(products) {
+  renderProducts(products, "special-product-list");
+}
