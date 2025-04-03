@@ -99,7 +99,7 @@ function getData() {
 
         card.addEventListener("click", function () {
           // الانتقال إلى صفحة المنتج مع إضافة معرف المنتج في الرابط
-          window.location.href = `../product/product.html?id=${product.id}`;
+          window.location.href = `./pages/product/product.html?id=${product.id}`;
         });
 
         let cardImg = document.createElement("div");
