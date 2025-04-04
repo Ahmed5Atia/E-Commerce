@@ -4,9 +4,13 @@ let id = searchParams.get("id");
 let product;
 let quantity = document.getElementById('quantity') // quantity input
 let addToCart = document.querySelector('.add-to-cart')
+let sideImages = document.querySelector('.side-images')
 
 
+quantity.onchange = function () {
+    price.innerText = `$${product.price * quantity.value}`;
 
+}
 
 function increase() { // increase quantity button
     let currentQuantity = Number(quantity.value);
@@ -33,37 +37,61 @@ function fillRating(rating) { // stars filling
     document.getElementById('rating').innerText = rating;
 }
 
+function getProductData() {
+    let xhr = new XMLHttpRequest(); // getting product data from API
+    xhr.open("GET", `https://dummyjson.com/products/${id}`, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let res = xhr.response;
+            // getting the product and turning it into a normal object
+            product = JSON.parse(res);
+            // filling the stars with product rating
+            fillRating(product.rating);
+            let title = document.getElementById('title');
+            title.innerText = product.title;
+            let pageTitle = document.getElementById('page-title');
+            pageTitle.innerText = product.title;
+            let description = document.getElementById('description');
+            description.innerText = product.description;
+            let price = document.getElementById('price');
+            price.innerText = `$${product.price * quantity.value}`;
+            let mainImage = document.getElementById('main-image');
+            mainImage.src = product.images[0];
+            let isFirstImage = true;
+            for (let img of product.images) {
+                let image = document.createElement('img')
+                image.src = img;
+                image.height = 100
+                // Add 'active' class to the first image thumbnail
+                if (isFirstImage){
+                    image.setAttribute('class', 'side-images-image active');
+                    isFirstImage = false;
+                }
+                else{
+                    image.setAttribute('class', 'side-images-image');
+                }
+                sideImages.appendChild(image);
+                image.addEventListener('click', function () {
+                    mainImage.src = image.src
+                    document.querySelectorAll(".side-images-image").forEach(img => img.classList.remove("active"));
 
-let xhr = new XMLHttpRequest(); // getting product data from API
-xhr.open("GET", "https://fakestoreapi.com/products", true);
-xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-        let res = xhr.response;
-        let data = JSON.parse(res);
-        function getProduct() { // function to get the product object for the wanted id
-            const product = data.find((product) => product.id == id);
-            return product;
+                    // Add 'active' class to the clicked thumbnail
+                    image.classList.add("active");
+                }
+                )
+            // console.log(image);
         }
-        product = getProduct()
-        fillRating(product.rating.rate);
-        let title = document.getElementById('title');
-        let pageTitle = document.getElementById('page-title');
-        pageTitle.innerText = product.title;
-        title.innerText = product.title;
-        let description = document.getElementById('description');
-        description.innerText = product.description;
-        let price = document.getElementById('price');
-        price.innerText = `$${product.price * quantity.value}`;
-        let mainImage = document.getElementById('main-image');
-        mainImage.src = product.image;
 
 
     }
 }
 xhr.send();
+}
+getProductData()
 
 
 addToCart.onclick = function () {
+
     console.log('hello');
     // functionality for the add to cart button
 }
