@@ -52,12 +52,10 @@ function addEventListeners(containerId) {
     const productId = card.dataset.id;
     const addToCartBtn = card.querySelector(".add-to-cart");
 
-    card.querySelector(".card-img").addEventListener("click", () => {
-      window.location.href = `./pages/product/product.html?id=${productId}`;
-    });
-
-    card.querySelector(".card-body").addEventListener("click", () => {
-      window.location.href = `./pages/product/product.html?id=${productId}`;
+    card.addEventListener("click", (e) => {
+      if (e.target.closest(".card-img, .card-body")) {
+        window.location.href = `./pages/product/product.html?id=${productId}`;
+      }
     });
 
     card.addEventListener(
@@ -311,16 +309,53 @@ fetchCategories((categories) => {
 function fetchProducts(category = "mobile-accessories") {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", `https://dummyjson.com/products/category/${category}`, true);
+
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
       let response = JSON.parse(xhr.responseText);
       let products = response.products;
 
-      renderProducts(products, "product-by-category");
+      const container = document.getElementById("product-by-category");
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      let visibleProducts = 10;
+      let increment = 5;
+      let totalProducts = products.length;
+
+      products.slice(0, visibleProducts).forEach((product) => {
+        container.innerHTML += createProductCard(product);
+      });
+
+      addEventListeners("product-by-category");
+
+      const loadMoreBtn = document.getElementById("load-more");
+      if (totalProducts > visibleProducts) {
+        loadMoreBtn.style.display = "block";
+      } else {
+        loadMoreBtn.style.display = "none";
+      }
+
+      loadMoreBtn.onclick = function () {
+        let newVisibleCount = visibleProducts + increment;
+
+        products.slice(visibleProducts, newVisibleCount).forEach((product) => {
+          container.innerHTML += createProductCard(product);
+        });
+
+        visibleProducts = newVisibleCount;
+
+        if (visibleProducts >= totalProducts) {
+          loadMoreBtn.style.display = "none";
+        }
+        addEventListeners("product-by-category");
+      };
     }
   };
   xhr.send();
 }
+
 fetchProducts();
 
 // function to display random product ================================
