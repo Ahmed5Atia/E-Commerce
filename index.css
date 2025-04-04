@@ -4,6 +4,7 @@
   padding: 0;
   font-family: Arial, sans-serif;
 }
+
 body {
   margin: 10px;
   margin-left: 15px;
@@ -13,8 +14,7 @@ body {
 #third-section,
 .four-section,
 #five-section,
-#six-section,
-#seven-section {
+#six-section {
   margin: 0px 15px;
 }
 
@@ -75,6 +75,7 @@ body {
   height: 100%;
   width: 100%;
   background-size: cover;
+  min-height: 300px;
 }
 
 #prev-btn,
@@ -126,60 +127,6 @@ body {
 .dot.active {
   background-color: #db4444;
   transform: scale(1.2);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  #first-section {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  #category {
-    padding: 10px 0;
-  }
-
-  #category ul li {
-    padding: 10px 0;
-    text-align: center;
-  }
-
-  .line {
-    width: 100%;
-    height: 2px;
-    margin: 15px 0;
-  }
-
-  #carousel-container {
-    height: 250px;
-    margin: 0;
-  }
-
-  #prev-btn,
-  #next-btn {
-    font-size: 24px;
-    padding: 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  body {
-    padding: 0 8px;
-  }
-
-  #carousel-container {
-    height: 200px;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-  }
-
-  #prev-btn,
-  #next-btn {
-    font-size: 20px;
-  }
 }
 
 /* ========================================================= */
@@ -309,20 +256,23 @@ body {
   overflow: hidden;
   position: relative;
   padding-left: 15px;
+  overflow-x: auto;
 }
 .carousel {
   display: flex;
   transition: transform 0.5s ease-in-out;
+  flex-wrap: nowrap;
+  padding-bottom: 15px;
 }
 .card {
   min-width: 270px;
-  height: 335px;
+  height: 310px;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-  margin-right: 10px;
+  margin-left: 10px;
   cursor: pointer;
 }
 .card:hover {
@@ -338,6 +288,8 @@ body {
   width: 100%;
   height: 215px;
   border-radius: 5px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
 }
 .offer {
   position: absolute;
@@ -425,6 +377,7 @@ body {
   color: #555;
   margin-left: 5px;
 }
+/* ============================= */
 
 .hrline {
   width: 70%;
@@ -455,53 +408,322 @@ body {
   margin-top: 1%;
 }
 
+#load-more {
+  background-color: #db4444;
+  color: #ffffff;
+  border: 3px solid #db4444;
+  font-size: 20px;
+  height: 45px;
+  width: 288px;
+  display: none;
+}
+
 /* *********====================== */
 .four-section {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-  width: 100%;
-  margin-top: 3%;
-  margin-bottom: 3%;
+  width: 95%;
+  padding: 3% 0;
 }
+
 .container {
   display: flex;
-  gap: 74px;
-  background-color: #000;
-  color: white;
-  width: 90%;
-  height: 400px;
+  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
+  background-color: #000000;
+  color: #ffffff;
+  width: 70%;
+  max-width: 1200px;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
-h1 {
-  font-size: 40px;
-}
+
 .text-content {
+  flex: 1 1 300px;
   display: flex;
-  margin-left: 5%;
-  gap: 50px;
   flex-direction: column;
+  gap: 1.5rem;
+  margin-right: 2rem;
+}
+
+.text-content > h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.text-content > h2 {
+  color: #00ff66;
+  font-size: 1.5rem;
 }
 
 .btn {
-  width: 60%;
-  background: #00ff66;
-  padding: 15px 30px;
+  width: fit-content;
+  background-color: #00ff66;
+  padding: 0.8rem 2rem;
   border: none;
-  font-size: 18px;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s ease;
+  border-radius: 8px;
 }
+
 .btn:hover {
-  background: #00cc66;
+  background-color: #00cc66;
 }
+
+.product-img {
+  flex: 1 1 300px;
+  display: flex;
+  justify-content: center;
+}
+
 .product-img img {
-  max-width: 400px;
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  border-radius: 12px;
 }
+
+/* seven-section stylee */
+.services-section {
+  padding: 40px 20px;
+  margin: 6% 0px;
+}
+
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.service-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 350px;
+}
+
+.service-icon {
+  font-size: 32px;
+  color: #ffffff;
+  background-color: #000000;
+  padding: 15px;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 8px solid #7d8184;
+}
+
+.service-content h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.service-content p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+/* Responsive Styles
 
 /* #six-section ====================================*/
 #six-section,
 #seven-section {
   margin-bottom: 8%;
+}
+@media (max-width: 1024px) {
+  .flash-sales {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  #carousel-control {
+    left: 6%;
+    margin-top: 10px;
+  }
+
+  .carousel-arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .card {
+    min-width: 220px;
+    height: auto;
+  }
+
+  .card-img img {
+    height: auto;
+    max-height: 200px;
+  }
+
+  .add-to-cart {
+    top: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .text-content {
+    margin: 0 0 2rem 0;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .btn {
+    width: 70%;
+  }
+
+  #first-section {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  #category {
+    display: none;
+  }
+
+  .line {
+    display: none;
+  }
+
+  #carousel-container {
+    height: 250px;
+    margin: 0;
+  }
+
+  #prev-btn,
+  #next-btn {
+    font-size: 24px;
+    padding: 8px;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .flash-sales {
+    align-items: center;
+    text-align: center;
+  }
+
+  #time-day {
+    gap: 1rem;
+    font-size: 0.8em;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .time-unit label {
+    margin-left: 0;
+  }
+
+  .view-all-products {
+    width: 90%;
+    font-size: 1rem;
+  }
+
+  .carousel {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  #carousel-control {
+    display: flex;
+  }
+
+  .carousel-arrow {
+    width: 30px;
+    height: 30px;
+  }
+  .services-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .service-item {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 0 8px;
+  }
+
+  #carousel-container {
+    height: 200px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  #prev-btn,
+  #next-btn {
+    font-size: 20px;
+  }
+
+  .flash-sales > p {
+    font-size: 24px;
+  }
+
+  .time-unit p {
+    font-size: 24px;
+  }
+
+  .separator {
+    font-size: 24px;
+  }
+
+  .card-price {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-title {
+    font-size: 14px;
+  }
+
+  .card-price-offer {
+    font-size: 12px;
+  }
+
+  .rate i {
+    font-size: 14px;
+  }
+
+  .num-rate {
+    font-size: 12px;
+  }
 }
