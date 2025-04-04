@@ -11,6 +11,13 @@ cartIds.addEventListener("loadend", () => {
   let id = JSON.parse(cartIds.response);
   let items = id.users[0].cart;
 
+  
+  if (!items || items.length === 0) {
+    displayEmptyCart();
+    updateCartTotal(0); 
+    return;
+  }
+
   let total = 0;
 
   items.forEach((item) => {
@@ -58,6 +65,17 @@ cartIds.addEventListener("loadend", () => {
   });
 });
 
+// Function to display empty cart message
+function displayEmptyCart() {
+  cartItems.innerHTML = `
+    <tr>
+      <td colspan="5" style="text-align: center; padding: 20px;">
+        No items in the cart
+      </td>
+    </tr>
+  `;
+}
+
 // Function to update the cart total
 function updateCartTotal(total) {
   document.getElementById("cart-total").textContent = total.toFixed(2);
@@ -94,6 +112,11 @@ function deleteItem(event) {
       row.querySelector(".subtotal").textContent.replace("$", "")
     );
     row.remove();
+
+    // Check if cart is empty after deletion
+    if (document.querySelectorAll("#tableBody tr").length === 0) {
+      displayEmptyCart();
+    }
 
     // Update the total after deleting
     let total = parseFloat(document.getElementById("cart-total").textContent);
