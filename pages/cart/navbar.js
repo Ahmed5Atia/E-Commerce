@@ -50,12 +50,3 @@ navLinks.addEventListener("click", (e) => {
     navLinks.classList.remove("active");
   }
 });
-
-// Update links based on environment
-// document.addEventListener("DOMContentLoaded", function () {
-//   // تحديد المسار الأساسي أولاً
-//   const isLocal = window.location.hostname === "localhost" ||
-//                  window.location.protocol === "file:" ||
-//                  window.location.host === "127.0.0.1:5500";
-
-//   const basePath = isLocal ? "" : "/E-Commerce";
