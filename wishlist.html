@@ -1,62 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wishlist</title>
     <!-- SweetAlert CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="wishlist.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="wishlist.css" />
+  </head>
+  <body>
     <header>
-        <div class="logo">Exclusive</div>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Sign Up</a></li>
-            </ul>
-        </nav>
-        <div class="header-actions">
-            <div class="search-bar">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" placeholder="What are you looking for?" id="searchInput">
-            </div>
-            <div class="wishlist-icon" id="headerWishlist">
-                <i class="fas fa-heart"></i>
-                <span class="wishlist-count-badge" id="headerWishlistCount">0</span>
-            </div>
+      <div class="logo">Exclusive</div>
+      <nav>
+        <ul>
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Sign Up</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            placeholder="What are you looking for?"
+            id="searchInput"
+          />
         </div>
+        <div class="wishlist-icon" id="headerWishlist">
+          <i class="fas fa-heart"></i>
+          <span class="wishlist-count-badge" id="headerWishlistCount">0</span>
+        </div>
+      </div>
     </header>
-    
-    <main>
-        <div class="wishlist-header">
-            <h2 id="wishlistTitle">Wishlist (<span id="wishlistCount">0</span>)</h2>
-            <div class="wishlist-count"><span id="itemCount">0</span> items</div>
-        </div>
-        
-        <div class="wishlist-grid" id="wishlistContainer">
-            <div class="loading">Loading your wishlist...</div>
-        </div>
-        
-        <h3 class="section-title">
-            Just For You
-            <a href="#" id="seeAllLink">See All</a>
-        </h3>
-        
-        <div class="wishlist-grid" id="recommendationsContainer">
-            <div class="loading">Loading recommendations...</div>
-        </div>
-    </main>
 
+    <main>
+      <div class="wishlist-header">
+        <h2 id="wishlistTitle">Wishlist (<span id="wishlistCount">0</span>)</h2>
+        <div class="wishlist-count"><span id="itemCount">0</span> items</div>
+      </div>
+
+      <div class="wishlist-grid" id="wishlistContainer">
+        <div class="loading">Loading your wishlist...</div>
+      </div>
+
+      <h3 class="section-title">
+        Just For You
+        <a href="#" id="seeAllLink">See All</a>
+      </h3>
+
+      <div class="wishlist-grid" id="recommendationsContainer">
+        <div class="loading">Loading recommendations...</div>
+      </div>
+    </main>
 
     <!-- SweetAlert JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- JS file -->
     <script src="wishlist.js"></script>
-</body>
+  </body>
 </html>
