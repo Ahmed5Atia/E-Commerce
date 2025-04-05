@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <span></span>
       </div>
       <ul class="nav-links">
-        <li><a href="/">Home</a></li>
+        <li><a href="/index.html">Home</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#signup">Sign Up</a></li>
