@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
         <li><a href="#signup">Sign Up</a></li>
       </ul>
       <div class="icons">
-        <a href="../../pages/wishlist/wishlist.html" class="icon fav" data-count="0"
+        <a href="/pages/wishlist/wishlist.html" class="icon fav" data-count="0"
           ><i class="fas fa-heart" style="color: #ff4d4d"></i
         ></a>
-        <a href="../../pages/cart/cart.html" class="icon cart" data-count="0"
+        <a href="/pages/cart/cart.html" class="icon cart" data-count="0"
           ><i class="fas fa-shopping-cart"></i
         ></a>
         <a href="#" class="icon"><i class="fas fa-user"></i></a>
