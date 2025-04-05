@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.protocol === "file:" ||
     window.location.host === "127.0.0.1:5500";
 
-  const basePath = isLocal ? "" : "https://ahmed5atia.github.io/E-Commerce/";
+  const basePath = isLocal ? "" : "https://ahmed5atia.github.io//E-Commerce/";
 
   const navbarHTML = `
   <nav class="navbar">
