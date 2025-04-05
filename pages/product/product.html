@@ -3,14 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-    />
     <title id="page-title"></title>
     <style>
       body {
-        font-family: "Inter", sans-serif;
+        font-family: Verdana, sans-serif;
       }
       .container {
         display: flex;
@@ -104,9 +100,57 @@
       }
       #rating {
         font-size: 20pt;
+        cursor: default;
       }
-      /* header styling */
+      .wishlist {
+        color: #e0e0e0;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #212325;
+        border-radius: 5px;
+        border: none;
+        font-size: 14pt;
+        cursor: pointer;
+      }
+      .wishlist:hover {
+        background-color: #000000;
+      }
 
+      .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        border-bottom: 2px solid #db4444;
+      }
+      .tab {
+        cursor: pointer;
+        padding: 10px 20px;
+        font-size: 14pt;
+        border-bottom: 2px solid transparent;
+      }
+      .tab.active {
+        border-bottom: 2px solid #db4444;
+        font-weight: bold;
+      }
+      .tab-content {
+        display: none;
+        margin-top: 20px;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .specifications,
+      .reviews {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .review {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+      }
     </style>
   </head>
   <body>
@@ -115,7 +159,9 @@
         <div class="main-image">
           <img id="main-image" src="" alt="" />
         </div>
-        <div class="side-images"></div>
+        <div class="side-images">
+          <!-- pictures will be dynamically added here -->
+        </div>
       </div>
 
       <div class="details">
@@ -142,7 +188,7 @@
               width="120"
               height="24"
             >
-              <!-- Empty Stars (Gray) -->
+              <!-- Empty Stars -->
               <g fill="#rgb(35, 34, 34)">
                 <path
                   d="M12 0l3.09 6.26L22 7.27l-5 4.87L18.18 20 12 16.9 5.82 20 7 12.14 2 7.27l6.91-1.01L12 0z"
@@ -161,7 +207,7 @@
                 ></path>
               </g>
 
-              <!-- Filled Stars (Yellow) -->
+              <!-- Filled Stars (gold) -->
               <g fill="gold" clip-path="url(#clip)">
                 <path
                   d="M12 0l3.09 6.26L22 7.27l-5 4.87L18.18 20 12 16.9 5.82 20 7 12.14 2 7.27l6.91-1.01L12 0z"
@@ -191,6 +237,21 @@
         </div>
 
         <button type="button" class="add-to-cart">Add to cart</button>
+        <button type="button" class="wishlist">Add to Wishlist</button>
+        <div class="tabs">
+          <div class="tab active" id="specifications-tab">Specifications</div>
+          <div class="tab" id="reviews-tab">Reviews</div>
+        </div>
+        <div class="tab-content active" id="specifications-content">
+          <div class="specifications">
+            <!-- Specifications will be dynamically added here -->
+          </div>
+        </div>
+        <div class="tab-content" id="reviews-content">
+          <div class="reviews">
+            <!-- Reviews will be dynamically added here -->
+          </div>
+        </div>
       </div>
     </div>
 
