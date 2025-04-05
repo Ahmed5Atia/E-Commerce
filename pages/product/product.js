@@ -4,8 +4,13 @@ let id = searchParams.get("id");
 let product;
 let quantity = document.getElementById('quantity') // quantity input
 let addToCart = document.querySelector('.add-to-cart')
+let wishlistButton = document.querySelector('.wishlist');
 let sideImages = document.querySelector('.side-images')
 
+let specificationsTab = document.getElementById('specifications-tab');
+let reviewsTab = document.getElementById('reviews-tab');
+let specificationsContent = document.getElementById('specifications-content');
+let reviewsContent = document.getElementById('reviews-content');
 
 quantity.onchange = function () {
     price.innerText = `$${product.price * quantity.value}`;
@@ -79,10 +84,9 @@ function getProductData() {
                     image.classList.add("active");
                 }
                 )
-            // console.log(image);
         }
-
-
+        addSpecifications();
+        addReviews();
     }
 }
 xhr.send();
@@ -90,8 +94,80 @@ xhr.send();
 getProductData()
 
 
-addToCart.onclick = function () {
+// Tab switching functionality
+specificationsTab.onclick = function () {
+    specificationsTab.classList.add('active');
+    reviewsTab.classList.remove('active');
+    specificationsContent.classList.add('active');
+    reviewsContent.classList.remove('active');
+};
 
-    console.log('hello');
-    // functionality for the add to cart button
+reviewsTab.onclick = function () {
+    reviewsTab.classList.add('active');
+    specificationsTab.classList.remove('active');
+    reviewsContent.classList.add('active');
+    specificationsContent.classList.remove('active');
+};
+
+/// Populate Specifications and Reviews
+// Specifications tab
+function addSpecifications() {
+    const specifications = document.querySelector('.specifications');
+    specifications.innerHTML = `
+    <p><strong>Brand:</strong> ${product.brand}</p>
+    <p><strong>SKU:</strong> ${product.sku}</p>
+    <p><strong>Weight:</strong> ${product.weight} kg</p>
+    <p><strong>Dimensions:</strong> ${product.dimensions.width} x ${product.dimensions.height} x ${product.dimensions.depth} cm</p>
+    <p><strong>Warranty:</strong> ${product.warrantyInformation}</p>
+    <p><strong>Shipping:</strong> ${product.shippingInformation}</p>
+    <p><strong>Availability:</strong> ${product.availabilityStatus}</p>
+    `;
 }
+
+
+// Reviews tab
+function addReviews() {
+    const reviews = document.querySelector('.reviews');
+    reviews.innerHTML = '';
+    product.reviews.forEach((review) => {
+        const reviewElement = document.createElement('div');
+        reviewElement.classList.add('review');
+        reviewElement.innerHTML = `
+        <p><strong>${review.reviewerName}</strong> (${review.rating}/5)</p>
+        <p>${review.comment}</p>
+        <p><small>${new Date(review.date).toLocaleDateString()}</small></p>
+        `;
+        reviews.appendChild(reviewElement);
+    });
+}
+
+// Add to Cart functionality
+addToCart.onclick = function () {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingProductIndex = cart.findIndex(item => item.id === product.id);
+    
+    if (existingProductIndex !== -1) {
+        cart[existingProductIndex].quantity += Number(quantity.value);
+    } else {
+        cart.push({ id: product.id, title: product.title, price: product.price, quantity: Number(quantity.value) });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`${product.title} has been added to your cart.`);
+}
+
+
+// Add to Wishlist functionality
+wishlistButton.onclick = function () {
+const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+const isProductInWishlist = wishlist.some(item => item.id === product.id);
+
+if (!isProductInWishlist) {
+    wishlist.push({ id: product.id, title: product.title, price: product.price });
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    alert(`${product.title} has been added to your wishlist.`);
+} else {
+    alert(`${product.title} is already in your wishlist.`);
+}
+};
+
