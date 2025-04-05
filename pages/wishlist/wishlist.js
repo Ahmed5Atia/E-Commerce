@@ -89,7 +89,7 @@ if (count > 0) {
 // Fetch products from API using XMLHttpRequest
 function fetchProducts() {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://fakestoreapi.com/products', true);
+    xhr.open('GET', 'https://fakestoreapi.com/products');
     
     xhr.onload = function() {
         if (xhr.status === 200) {

@@ -2,7 +2,7 @@ let cartItems = document.getElementById("tableBody");
 let cartIds = new XMLHttpRequest();
 let returnToHome = document.getElementById("returnToHome");
 returnToHome.addEventListener("click", () => {
-  window.location.href = "../Home/home.html";
+  window.location.href = "../../index.html";
 });
 cartIds.open("GET", "/project.JSON", true);
 cartIds.send();
@@ -11,10 +11,9 @@ cartIds.addEventListener("loadend", () => {
   let id = JSON.parse(cartIds.response);
   let items = id.users[0].cart;
 
-  
   if (!items || items.length === 0) {
     displayEmptyCart();
-    updateCartTotal(0); 
+    updateCartTotal(0);
     return;
   }
 

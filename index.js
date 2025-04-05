@@ -69,14 +69,37 @@ function addEventListeners(containerId) {
 
     //"Add To Cart" event on click the button storge id in local storega as array of numbers===========================
     addToCartBtn.addEventListener("click", () => {
-      const productId = card.dataset.id;
-      let storedProducts = JSON.parse(localStorage.getItem("productIds")) || [];
-      if (!storedProducts.includes(Number(productId))) {
-        storedProducts.push(Number(productId));
+      const productId = Number(card.dataset.id);
+
+      // جلب أو إنشاء بيانات المستخدم
+      let userData = JSON.parse(localStorage.getItem("userData")) || {
+        users: {
+          username: "",
+          password: "",
+          email: "",
+          wishlist: [],
+          cart: [],
+        },
+      };
+
+      // التحقق من وجود المنتج
+      const productExists = userData.users.cart.some(
+        (item) => item === productId
+      );
+
+      if (!productExists) {
+        userData.users.cart.push({
+          id: productId,
+          quantity: 1, // يمكنك إضافة خصائص أخرى مثل السعر، التاريخ، إلخ
+        });
+
+        localStorage.setItem("userData", JSON.stringify(userData));
+        alert("تمت إضافة المنتج إلى السلة بنجاح!");
+      } else {
+        alert("هذا المنتج موجود بالفعل في سلة التسوق!");
       }
-      localStorage.setItem("productIds", JSON.stringify(storedProducts));
     });
-  });
+  }); // نهاية forEach
 }
 
 // get categorise list to used in function show list in ul and buttons =========================================
