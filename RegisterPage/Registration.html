@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    
+    <style>
+        body {
+           
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            max-width: 900px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .left-section {
+            background: #e3f2fd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .left-section img {
+            width: 100%;
+        }
+        .right-section {
+            width: 50%;
+            padding: 40px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          
+        }
+        button {
+            background-color: #0d0000;
+            color: white;
+            padding:15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+       
+        .login-link {
+            margin-top: 10px;
+        }
+        .login-link a {
+            color: #d32f2f;
+            text-decoration: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <img src="../Project JS 2025/imges/shoppingcart.jpeg" alt="Shopping Concept">
+        </div>
+        <div class="right-section">
+            <h2>Create an account</h2>
+            <p>Enter your details</p>
+            <form id="registerForm">
+                <input type="text" id="name" placeholder="Name" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Create Account</button>
+            </form>
+            <p class="login-link">Already have an account? <a href="login.html">Log in</a></p>
+        </div>
+    </div>
+
+   <script src="main.js"></script>
+</body>
+</html>
