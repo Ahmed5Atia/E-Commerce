@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <li><a href="${basePath}/index.html">Home</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#about">About</a></li>
-        <li><a href="#signup">Sign Up</a></li>
+        <li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>
       </ul>
       <div class="icons">
         <a href="${basePath}/pages/wishlist/wishlist.html" id="wishlistLink" class="icon fav wishlist-icon"

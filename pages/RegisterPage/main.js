@@ -1,11 +1,9 @@
-localStorage.setItem("users", JSON.stringify([]));
-
 document.getElementById("registerForm").onsubmit = function () {
   let name = document.getElementById("name").value;
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
 
-  let users = JSON.parse(localStorage.getItem("users"));
+  let users = JSON.parse(localStorage.getItem("users")) || [];
 
   let user = {
     userName: name,
@@ -23,6 +21,7 @@ document.getElementById("registerForm").onsubmit = function () {
 
   localStorage.setItem("users", JSON.stringify(users));
   alert("Thanks for the registration");
-  //window.location.href = "../../index.html";
+  window.location.href = "../../index.html";
+  sessionStorage.setItem("currentUser", JSON.stringify(user.userName));
   return false;
 };
