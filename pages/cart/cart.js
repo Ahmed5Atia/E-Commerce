@@ -15,17 +15,17 @@ if (checkoutBtn) {
 loadCartItems();
 
 function loadCartItems() {
-  let currentUser = sessionStorage.getItem("currentUser");
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   console.log("Current User:", currentUser);
 
   if (!currentUser) {
     console.log("No user logged in, fetching from JSON");
     fetchFromJson();
   } else {
-    if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
+ /*    if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
       currentUser = currentUser.slice(1, -1);
     }
-    console.log("Cleaned Current User:", currentUser);
+    console.log("Cleaned Current User:", currentUser); */
 
     let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
     console.log("Users from localStorage:", currentUsers);

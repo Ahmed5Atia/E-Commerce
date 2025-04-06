@@ -48,16 +48,32 @@ document.addEventListener("DOMContentLoaded", function () {
       navLinks.classList.remove("active");
     }
   });
-  updateWishlistCount();
+  updateCartCount();
 });
 
-function updateWishlistCount() {
-  const headerWishlistCount = document.getElementById('headerWishlistCount');
-  // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
-  const userData = JSON.parse(localStorage.getItem('wishlist'));
-  // const count = userData.users.wishlist.length;
-  const count = userData.length;
-  headerWishlistCount.textContent = count;
-
+function updateCartCount() {
+  const headerCartCount = document.getElementById('headerCartCount');
+  // // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
+  // const userData = JSON.parse(localStorage.getItem('wishlist'));
+  // // const count = userData.users.wishlist.length;
+  // const count = userData.length;
+  
+  
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  
+  if (!currentUser) {
+    alert("Please log in");
+    
+    return;
+  }
+  
+  let currentUsers = JSON.parse(localStorage.getItem("users"));
+  for (let i = 0; i < currentUsers.length; i++) {
+    let userName = currentUsers[i].userName;
+    let email = currentUsers[i].email;
+    
+    if (currentUser == userName || currentUser == email) {
+      headerCartCount.textContent = currentUsers[i].cart.length;
+      }
 }
-
+}
