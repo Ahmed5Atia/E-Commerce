@@ -90,7 +90,7 @@ function addEventListeners(containerId) {
       if (!productExists) {
         userData.users.cart.push({
           id: productId,
-          quantity: 1, // يمكنك إضافة خصائص أخرى مثل السعر، التاريخ، إلخ
+          quantity: 1, 
         });
 
         localStorage.setItem("userData", JSON.stringify(userData));
@@ -99,7 +99,7 @@ function addEventListeners(containerId) {
         alert("هذا المنتج موجود بالفعل في سلة التسوق!");
       }
     });
-  }); // نهاية forEach
+  });
 }
 
 // get categorise list to used in function show list in ul and buttons =========================================
