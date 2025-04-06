@@ -1,16 +1,77 @@
 let cartItems = document.getElementById("tableBody");
-let cartIds = new XMLHttpRequest();
 let returnToHome = document.getElementById("returnToHome");
+let checkoutBtn = document.getElementById("checkoutBtn");
+
+// Event listeners for navigation and checkout
 returnToHome.addEventListener("click", () => {
   window.location.href = "../../index.html";
 });
-cartIds.open("GET", "/project.JSON", true);
-cartIds.send();
 
-cartIds.addEventListener("loadend", () => {
-  let id = JSON.parse(cartIds.response);
-  let items = id.users[0].cart;
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", checkout);
+}
 
+// Load cart items
+loadCartItems();
+
+function loadCartItems() {
+  let currentUser = sessionStorage.getItem("currentUser");
+  console.log("Current User:", currentUser);
+
+  if (!currentUser) {
+    console.log("No user logged in, fetching from JSON");
+    fetchFromJson();
+  } else {
+    if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
+      currentUser = currentUser.slice(1, -1);
+    }
+    console.log("Cleaned Current User:", currentUser);
+
+    let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
+    console.log("Users from localStorage:", currentUsers);
+    let items = [];
+
+    for (let i = 0; i < currentUsers.length; i++) {
+      if (
+        currentUser === currentUsers[i].userName ||
+        currentUser === currentUsers[i].email
+      ) {
+        items = currentUsers[i].cart || [];
+        console.log("Found user cart:", items);
+        break;
+      }
+    }
+
+    if (items.length > 0) {
+      processCartItems(items);
+    } else {
+      console.log("User cart is empty");
+      displayEmptyCart();
+      updateCartTotal(0);
+    }
+  }
+}
+
+function fetchFromJson() {
+  let cartIds = new XMLHttpRequest();
+  cartIds.open("GET", "/project.JSON", true);
+  cartIds.send();
+
+  cartIds.addEventListener("loadend", () => {
+    if (cartIds.status === 200) {
+      let id = JSON.parse(cartIds.response);
+      let items = id.users[0].cart || [];
+      console.log("JSON cart items:", items);
+      processCartItems(items);
+    } else {
+      console.error("Failed to load JSON:", cartIds.status);
+      displayEmptyCart();
+      updateCartTotal(0);
+    }
+  });
+}
+
+function processCartItems(items) {
   if (!items || items.length === 0) {
     displayEmptyCart();
     updateCartTotal(0);
@@ -21,50 +82,43 @@ cartIds.addEventListener("loadend", () => {
 
   items.forEach((item) => {
     let xml = new XMLHttpRequest();
-    xml.open("GET", `https://fakestoreapi.com/products/${item}`, true);
+    xml.open("GET", `https://dummyjson.com/products/${item}`, true);
     xml.send();
 
     xml.addEventListener("loadend", () => {
-      let data = JSON.parse(xml.response);
-      let price = data.price;
-      let initialSubtotal = price * 1;
+      if (xml.status === 200) {
+        let data = JSON.parse(xml.response);
+        let price = data.price;
+        let initialSubtotal = price * 1;
 
-      total += initialSubtotal;
+        total += initialSubtotal;
+        updateCartTotal(total);
 
-      // Update the total dynamically
-      updateCartTotal(total);
-
-      // Insert row with delete button
-      let row = document.createElement("tr");
-      row.innerHTML = `
-        <td>
-          <div class="imageTitle">
-            <div class="image">
-              <img src="${data.image}" alt="" id="trans" />
+        let row = document.createElement("tr");
+        row.innerHTML = `
+          <td>
+            <div class="imageTitle">
+              <div class="image">
+                <img src="${data.images[0]}" alt="" id="trans" />
+              </div>
+              <p>${data.title}</p>
             </div>
-            <p>${data.title}</p>
-          </div>
-        </td>
-        <td>
-          <p class="price">${price}$</p>
-        </td>
-        <td>
-          <input type="number" class="quantity" data-price="${price}" min="1" value="1"/>
-        </td>
-        <td class="subtotal">${initialSubtotal}$</td>
-        <td>
-          <button class="delete-btn" data-id="${item}">X</button>
-        </td>`;
+          </td>
+          <td><p class="price">${price}$</p></td>
+          <td><input type="number" class="quantity" data-price="${price}" min="1" value="1"/></td>
+          <td class="subtotal">${initialSubtotal}$</td>
+          <td><button class="delete-btn" data-id="${item}">X</button></td>`;
 
-      cartItems.appendChild(row);
-
-      // Attach event listeners after adding items
-      attachEventListeners();
+        cartItems.appendChild(row);
+        // Attach listeners immediately after adding each row
+        attachEventListenersToRow(row);
+      } else {
+        console.error(`Failed to load product ${item}:`, xml.status);
+      }
     });
   });
-});
+}
 
-// Function to display empty cart message
 function displayEmptyCart() {
   cartItems.innerHTML = `
     <tr>
@@ -75,71 +129,106 @@ function displayEmptyCart() {
   `;
 }
 
-// Function to update the cart total
 function updateCartTotal(total) {
   document.getElementById("cart-total").textContent = total.toFixed(2);
 }
 
-// Function to update subtotal and cart total dynamically
 function updateSubtotal(event) {
   let input = event.target;
   let price = parseFloat(input.getAttribute("data-price"));
-  let quantity = parseInt(input.value);
+  let quantity = parseInt(input.value) || 1;
   let subtotalCell = input.closest("tr").querySelector(".subtotal");
 
   let subtotal = price * quantity;
   subtotalCell.textContent = `${subtotal.toFixed(2)}$`;
-
   recalculateCartTotal();
 }
 
-// Function to recalculate the cart total
 function recalculateCartTotal() {
   let total = 0;
   document.querySelectorAll(".subtotal").forEach((subtotal) => {
     total += parseFloat(subtotal.textContent.replace("$", ""));
   });
-
   updateCartTotal(total);
 }
 
-// Function to remove item from the cart
 function deleteItem(event) {
   if (event.target.classList.contains("delete-btn")) {
     let row = event.target.closest("tr");
     let subtotal = parseFloat(
       row.querySelector(".subtotal").textContent.replace("$", "")
     );
+    let itemId = event.target.getAttribute("data-id");
+    console.log("Deleting item ID:", itemId);
+
     row.remove();
 
-    // Check if cart is empty after deletion
-    if (document.querySelectorAll("#tableBody tr").length === 0) {
+    if (!document.querySelector("#tableBody tr")) {
+      console.log("Cart is now empty");
       displayEmptyCart();
     }
 
-    // Update the total after deleting
     let total = parseFloat(document.getElementById("cart-total").textContent);
     total -= subtotal;
     updateCartTotal(total);
 
-    // Remove from JSON file (simulated)
-    removeFromJson(event.target.getAttribute("data-id"));
+    let currentUser = sessionStorage.getItem("currentUser");
+    if (currentUser) {
+      removeFromLocalStorage(itemId);
+    } else {
+      console.log("No user logged in, skipping localStorage update");
+    }
   }
 }
 
-// Function to remove the item from project.JSON (simulated here)
-function removeFromJson(itemId) {
-  console.log(`Removing item ID: ${itemId} from JSON`);
+function removeFromLocalStorage(itemId) {
+  let currentUser = sessionStorage.getItem("currentUser");
+  if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
+    currentUser = currentUser.slice(1, -1);
+  }
+
+  let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
+  console.log("Before removal - Users:", currentUsers);
+
+  for (let i = 0; i < currentUsers.length; i++) {
+    if (
+      currentUser === currentUsers[i].userName ||
+      currentUser === currentUsers[i].email
+    ) {
+      if (currentUsers[i].cart && currentUsers[i].cart.length > 0) {
+        // Ensure itemId matches cart items (convert to string if needed)
+        currentUsers[i].cart = currentUsers[i].cart.filter(
+          (id) => String(id) !== String(itemId)
+        );
+        localStorage.setItem("users", JSON.stringify(currentUsers));
+        console.log(
+          `After removal - Updated cart for ${currentUser}:`,
+          currentUsers[i].cart
+        );
+      } else {
+        console.log("Cart is empty or undefined, no removal needed");
+      }
+      break;
+    }
+  }
 }
 
-function attachEventListeners() {
-  document.querySelectorAll(".quantity").forEach((input) => {
-    input.addEventListener("input", updateSubtotal);
-  });
-
-  document.getElementById("tableBody").addEventListener("click", deleteItem);
+function attachEventListenersToRow(row) {
+  let quantityInput = row.querySelector(".quantity");
+  if (quantityInput) {
+    quantityInput.addEventListener("input", updateSubtotal);
+  }
+  let deleteBtn = row.querySelector(".delete-btn");
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", deleteItem);
+  }
 }
 
 function checkout() {
-  alert("Proceeding to checkout!");
+  let total = parseFloat(document.getElementById("cart-total").textContent);
+  if (total > 0) {
+    alert("Proceeding to checkout with total: $" + total.toFixed(2));
+  } else {
+    alert("Your cart is empty!");
+  }
 }
