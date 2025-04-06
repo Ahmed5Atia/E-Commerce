@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
         <li><a href="#signup">Sign Up</a></li>
       </ul>
       <div class="icons">
-        <a href="${basePath}/pages/wishlist/wishlist.html" id="wishlistLink" class="icon fav" data-count="0"
-          ><i class="fas fa-heart" style="color: #ff4d4d"></i
-        ></a>
-        <a href="${basePath}/pages/cart/cart.html" id="cartLink" class="icon cart" data-count="0"
+        <a href="${basePath}/pages/wishlist/wishlist.html" id="wishlistLink" class="icon fav wishlist-icon"
+          ><i class="fas fa-heart"></i
+        ><span class="wishlist-count-badge" id="headerWishlistCount">0</span></a>
+        <a href="${basePath}/pages/cart/cart.html" id="cartLink" class="icon cart cart-icon"
           ><i class="fas fa-shopping-cart"></i
-        ></a>
+        ><span class="cart-count-badge" id="headerCartCount">0</span></a>
         <a href="/" class="icon"><i class="fas fa-user"></i></a>
       </div>
     </nav>
@@ -48,5 +48,16 @@ document.addEventListener("DOMContentLoaded", function () {
       navLinks.classList.remove("active");
     }
   });
+  updateWishlistCount();
 });
+
+function updateWishlistCount() {
+  const headerWishlistCount = document.getElementById('headerWishlistCount');
+  // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
+  const userData = JSON.parse(localStorage.getItem('wishlist'));
+  // const count = userData.users.wishlist.length;
+  const count = userData.length;
+  headerWishlistCount.textContent = count;
+
+}
 
