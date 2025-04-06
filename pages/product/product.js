@@ -154,6 +154,31 @@ addToCart.onclick = function () {
     
     localStorage.setItem('cart', JSON.stringify(cart));
     alert(`${product.title} has been added to your cart.`);
+    /*-----------*/
+   /*  let currentUser = sessionStorage.getItem("currentUser");
+
+    if (!currentUser) {
+      alert("Please log in");
+
+      return;
+    }
+
+    let currentUsers = JSON.parse(localStorage.getItem("users"));
+    if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
+      currentUser = currentUser.slice(1, -1); // Remove surrounding quotes
+    }
+    for (let i = 0; i < currentUsers.length; i++) {
+      let userName = currentUsers[i].userName;
+      let email = currentUsers[i].email;
+
+      if (currentUser == userName || currentUser == email) {
+        currentUsers[i].cart.push(productId);
+        //alert("found");
+      }
+    }
+    localStorage.setItem("users", JSON.stringify(currentUsers)); */
+
+     /*-----------*/
 }
 
 

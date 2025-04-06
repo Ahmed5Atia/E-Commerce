@@ -70,34 +70,49 @@ function addEventListeners(containerId) {
     //"Add To Cart" event on click the button storge id in local storega as array of numbers===========================
     addToCartBtn.addEventListener("click", () => {
       const productId = Number(card.dataset.id);
+      /*----------connection start-----------------*/
+      let currentUser = sessionStorage.getItem("currentUser");
 
+      if (!currentUser) {
+        alert("Please log in");
+
+        return;
+      }
+
+      let currentUsers = JSON.parse(localStorage.getItem("users"));
+      if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
+        currentUser = currentUser.slice(1, -1); // Remove surrounding quotes
+      }
+      for (let i = 0; i < currentUsers.length; i++) {
+        let userName = currentUsers[i].userName;
+        let email = currentUsers[i].email;
+
+        if (currentUser == userName || currentUser == email) {
+          currentUsers[i].cart.push(productId);
+          //alert("found");
+        }
+      }
+      localStorage.setItem("users", JSON.stringify(currentUsers));
+
+      /*----------connection end-----------------*/
       // جلب أو إنشاء بيانات المستخدم
-      let userData = JSON.parse(localStorage.getItem("userData")) || {
-        users: {
-          username: "",
-          password: "",
-          email: "",
-          wishlist: [],
-          cart: [],
-        },
-      };
 
       // التحقق من وجود المنتج
-      const productExists = userData.users.cart.some(
+      /*    const productExists = userData.users.cart.some(
         (item) => item === productId
       );
 
       if (!productExists) {
         userData.users.cart.push({
           id: productId,
-          quantity: 1, 
+          quantity: 1,
         });
 
         localStorage.setItem("userData", JSON.stringify(userData));
         alert("تمت إضافة المنتج إلى السلة بنجاح!");
       } else {
         alert("هذا المنتج موجود بالفعل في سلة التسوق!");
-      }
+      } */
     });
   });
 }
