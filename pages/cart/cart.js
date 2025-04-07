@@ -182,10 +182,10 @@ function deleteItem(event) {
 }
 
 function removeFromLocalStorage(itemId) {
-  let currentUser = sessionStorage.getItem("currentUser");
-  if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  /*   if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
     currentUser = currentUser.slice(1, -1);
-  }
+  } */
 
   let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
   console.log("Before removal - Users:", currentUsers);
