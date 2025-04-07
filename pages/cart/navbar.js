@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <li><a href="${basePath}/index.html">Home</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#about">About</a></li>
-        <li><a href="#signup">Sign Up</a></li>
+        <li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>
       </ul>
       <div class="icons">
         <a href="${basePath}/pages/wishlist/wishlist.html" id="wishlistLink" class="icon fav wishlist-icon"
@@ -48,16 +48,32 @@ document.addEventListener("DOMContentLoaded", function () {
       navLinks.classList.remove("active");
     }
   });
-  updateWishlistCount();
+  updateCartCount();
 });
 
-function updateWishlistCount() {
-  const headerWishlistCount = document.getElementById('headerWishlistCount');
-  // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
-  const userData = JSON.parse(localStorage.getItem('wishlist'));
-  // const count = userData.users.wishlist.length;
-  const count = userData.length;
-  headerWishlistCount.textContent = count;
-
+function updateCartCount() {
+  const headerCartCount = document.getElementById('headerCartCount');
+  // // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
+  // const userData = JSON.parse(localStorage.getItem('wishlist'));
+  // // const count = userData.users.wishlist.length;
+  // const count = userData.length;
+  
+  
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  
+  if (!currentUser) {
+    
+    
+    return;
+  }
+  
+  let currentUsers = JSON.parse(localStorage.getItem("users"));
+  for (let i = 0; i < currentUsers.length; i++) {
+    let userName = currentUsers[i].userName;
+    let email = currentUsers[i].email;
+    
+    if (currentUser == userName || currentUser == email) {
+      headerCartCount.textContent = currentUsers[i].cart.length;
+      }
 }
-
+}

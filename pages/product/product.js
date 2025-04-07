@@ -143,19 +143,19 @@ function addReviews() {
 
 // Add to Cart functionality
 addToCart.onclick = function () {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingProductIndex = cart.findIndex(item => item.id === product.id);
+    // const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // const existingProductIndex = cart.findIndex(item => item.id === product.id);
     
-    if (existingProductIndex !== -1) {
-        cart[existingProductIndex].quantity += Number(quantity.value);
-    } else {
-        cart.push({ id: product.id, title: product.title, price: product.price, quantity: Number(quantity.value) });
-    }
+    // if (existingProductIndex !== -1) {
+    //     cart[existingProductIndex].quantity += Number(quantity.value);
+    // } else {
+    //     cart.push({ id: product.id, title: product.title, price: product.price, quantity: Number(quantity.value) });
+    // }
     
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert(`${product.title} has been added to your cart.`);
+    // localStorage.setItem('cart', JSON.stringify(cart));
+    // alert(`${product.title} has been added to your cart.`);
     /*-----------*/
-   /*  let currentUser = sessionStorage.getItem("currentUser");
+   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
     if (!currentUser) {
       alert("Please log in");
@@ -164,23 +164,33 @@ addToCart.onclick = function () {
     }
 
     let currentUsers = JSON.parse(localStorage.getItem("users"));
-    if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
-      currentUser = currentUser.slice(1, -1); // Remove surrounding quotes
-    }
     for (let i = 0; i < currentUsers.length; i++) {
       let userName = currentUsers[i].userName;
       let email = currentUsers[i].email;
 
       if (currentUser == userName || currentUser == email) {
-        currentUsers[i].cart.push(productId);
+        currentUsers[i].cart.push(product.id);
+        updateCartCount(currentUsers[i].cart.length);
         //alert("found");
       }
     }
-    localStorage.setItem("users", JSON.stringify(currentUsers)); */
-
+    localStorage.setItem("users", JSON.stringify(currentUsers)); 
+    
      /*-----------*/
 }
-
+function updateCartCount(c) {
+    const headerCartCount = document.getElementById('headerCartCount');
+    const count = c;
+    headerCartCount.textContent = count;
+    console.log(headerCartCount);
+    
+    }
+    // // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
+    // const userData = JSON.parse(localStorage.getItem('cart'));
+    // const count = userData.users.wishlist.length;
+    
+  
+  
 
 // Add to Wishlist functionality
 wishlistButton.onclick = function () {

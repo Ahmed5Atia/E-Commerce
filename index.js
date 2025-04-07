@@ -71,7 +71,7 @@ function addEventListeners(containerId) {
     addToCartBtn.addEventListener("click", () => {
       const productId = Number(card.dataset.id);
       /*----------connection start-----------------*/
-      let currentUser = sessionStorage.getItem("currentUser");
+      let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
       if (!currentUser) {
         alert("Please log in");
@@ -80,9 +80,7 @@ function addEventListeners(containerId) {
       }
 
       let currentUsers = JSON.parse(localStorage.getItem("users"));
-      if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
-        currentUser = currentUser.slice(1, -1); // Remove surrounding quotes
-      }
+    
       for (let i = 0; i < currentUsers.length; i++) {
         let userName = currentUsers[i].userName;
         let email = currentUsers[i].email;
