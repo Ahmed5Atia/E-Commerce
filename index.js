@@ -51,6 +51,7 @@ function addEventListeners(containerId) {
   document.querySelectorAll(`#${containerId} .card`).forEach((card) => {
     const productId = card.dataset.id;
     const addToCartBtn = card.querySelector(".add-to-cart");
+    const favorite = card.querySelector(".favorite");
 
     card.addEventListener("click", (e) => {
       if (e.target.closest(".card-img, .card-body")) {
@@ -68,49 +69,88 @@ function addEventListeners(containerId) {
     );
 
     //"Add To Cart" event on click the button storge id in local storega as array of numbers===========================
-    addToCartBtn.addEventListener("click", () => {
+    // Add to Cart functionality
+    addToCartBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const productId = Number(card.dataset.id);
-      /*----------connection start-----------------*/
-      let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+      // Get current user from sessionStorage
+      const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
       if (!currentUser) {
-        alert("Please log in");
-
+        showInfoAlert("You Aren't loged In");
         return;
       }
 
-      let currentUsers = JSON.parse(localStorage.getItem("users"));
-    
-      for (let i = 0; i < currentUsers.length; i++) {
-        let userName = currentUsers[i].userName;
-        let email = currentUsers[i].email;
+      // Get and parse users from localStorage
+      let users = JSON.parse(localStorage.getItem("users")) || [];
 
-        if (currentUser == userName || currentUser == email) {
-          currentUsers[i].cart.push(productId);
-          //alert("found");
-        }
-      }
-      localStorage.setItem("users", JSON.stringify(currentUsers));
-
-      /*----------connection end-----------------*/
-      // جلب أو إنشاء بيانات المستخدم
-
-      // التحقق من وجود المنتج
-      /*    const productExists = userData.users.cart.some(
-        (item) => item === productId
+      // Find and update the user's cart
+      const userFound = users.find(
+        (user) => user.userName === currentUser || user.email === currentUser
       );
 
-      if (!productExists) {
-        userData.users.cart.push({
-          id: productId,
-          quantity: 1,
-        });
+      if (userFound) {
+        // Initialize cart array if it doesn't exist
+        userFound.cart = userFound.cart || [];
 
-        localStorage.setItem("userData", JSON.stringify(userData));
-        alert("تمت إضافة المنتج إلى السلة بنجاح!");
+        if (!userFound.cart.includes(productId)) {
+          userFound.cart.push(productId);
+          localStorage.setItem("users", JSON.stringify(users));
+          showSuccessAlert(
+            "The product has been successfully added to the cart!"
+          );
+          window.updateCartCount();
+        } else {
+          showInfoAlert("This product is already in the cart!");
+        }
       } else {
-        alert("هذا المنتج موجود بالفعل في سلة التسوق!");
-      } */
+        showErrorAlert("You must log in first");
+      }
+    });
+
+    // حدث إضافة المنتج إلى المفضلة
+    favorite.addEventListener("click", (e) => {
+      e.stopPropagation(); //stop card navigate to info page in click
+      const productId = Number(card.dataset.id);
+
+      const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+      if (!currentUser) {
+        showInfoAlert("You are not logged in");
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      const userFound = users.find(
+        (user) => user.userName === currentUser || user.email === currentUser
+      );
+
+      if (userFound) {
+        userFound.wishlist = userFound.wishlist || [];
+        if (!userFound.wishlist.includes(productId)) {
+          userFound.wishlist.push(productId);
+          localStorage.setItem("users", JSON.stringify(users));
+          showSuccessAlert(
+            "The product has been successfully added to the Favorit!"
+          );
+          favorite.style.color = "red";
+          window.updateWatchlistCount();
+        } else {
+          //remove form favorit list
+          userFound.wishlist = userFound.wishlist.filter(
+            (id) => id !== productId
+          );
+          localStorage.setItem("users", JSON.stringify(users));
+          window.showSuccessAlert(
+            "The product has been removed from favorites successfully!"
+          );
+          favorite.style.color = "";
+          window.updateWatchlistCount();
+        }
+      } else {
+        showErrorAlert("You must log in first");
+      }
     });
   });
 }
@@ -397,4 +437,37 @@ fetchProducts();
 // function to display random product ================================
 function specialProductList(products) {
   renderProducts(products, "special-product-list");
+}
+
+//alerts =========================
+// Show success alert with SweetAlert
+function showSuccessAlert(message) {
+  Swal.fire({
+    icon: "success",
+    title: "Success!",
+    text: message,
+    confirmButtonColor: "#000",
+    timer: 2000,
+  });
+}
+
+// Show info alert with SweetAlert
+function showInfoAlert(message) {
+  Swal.fire({
+    icon: "info",
+    title: "Info",
+    text: message,
+    confirmButtonColor: "#0d6efd",
+    timer: 2000,
+  });
+}
+
+// Show error alert with SweetAlert
+function showErrorAlert(message) {
+  Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: message,
+    confirmButtonColor: "#e63946",
+  });
 }
