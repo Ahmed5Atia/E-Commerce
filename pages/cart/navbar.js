@@ -62,7 +62,7 @@ function updateCartCount() {
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   
   if (!currentUser) {
-    alert("Please log in");
+    
     
     return;
   }
