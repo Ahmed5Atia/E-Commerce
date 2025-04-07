@@ -63,7 +63,6 @@ window.updateCartCount = function () {
 
   if (!currentUser) {
     alert("Please log in");
-
     return;
   }
 
