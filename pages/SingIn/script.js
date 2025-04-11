@@ -20,6 +20,6 @@ submitLogin.addEventListener("click", (e) => {
 let setCurrentUser = () => {
   let currentUser = user.value;
   sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
-  alert("Succesful loging in ");
+  //alert("Succesful loging in ");
   window.location.href = "../../index.html";
 };

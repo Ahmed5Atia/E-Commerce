@@ -1,5 +1,6 @@
 // Update links based on environment
 document.addEventListener("DOMContentLoaded", function () {
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const isLocal =
     window.location.hostname === "localhost" ||
     window.location.protocol === "file:" ||
@@ -30,7 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
         <h3>Account</h3>
         <div class="links">
           <a href="${basePath}/index.html">My Account</a>
-          <a href="${basePath}/pages/RegisterPage/Registration.html">Login/Register</a>
+              ${
+                currentUser
+                  ? `<a style="cursor: pointer;" onclick="handleLogOut()">Log Out</a>`
+                  : `  <a href="${basePath}/pages/RegisterPage/Registration.html">Login/Register</a>`
+              }
           <a href="${basePath}/pages/cart/cart.html">Cart</a>
           <a href="${basePath}/pages/wishlist/wishlist.html">Wishlist</a>
           <a href="">Contact</a>

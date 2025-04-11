@@ -1,5 +1,6 @@
 // Update links based on environment
 document.addEventListener("DOMContentLoaded", function () {
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const isLocal =
     window.location.hostname === "localhost" ||
     window.location.protocol === "file:" ||
@@ -19,7 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
         <li><a href="${basePath}/index.html">Home</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#about">About</a></li>
-        <li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>
+        ${
+          currentUser
+            ? `<li><a style="cursor: pointer;" onclick="handleLogOut()">Log Out</a></li>`
+            : `<li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>`
+        }
       </ul>
       <div class="icons">
         <a href="${basePath}/pages/wishlist/wishlist.html" id="wishlistLink" class="icon fav wishlist-icon"
@@ -100,6 +105,9 @@ window.updateWatchlistCount = function () {
   }
 };
 
+function handleLogOut() {
+  sessionStorage.clear();
+}
 //alerts =========================
 
 // Show info alert with SweetAlert
