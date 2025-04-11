@@ -62,7 +62,7 @@ window.updateCartCount = function () {
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   if (!currentUser) {
-    alert("Please log in");
+    //alert("Please log in");
     return;
   }
 
@@ -82,7 +82,7 @@ window.updateWatchlistCount = function () {
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   if (!currentUser) {
-    alert("Please log in");
+    // alert("Please log in");
     return;
   }
 
