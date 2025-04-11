@@ -7,9 +7,19 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <!-- SweetAlert CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
     <link rel="stylesheet" href="./index.css" />
     <link rel="stylesheet" href="./pages/cart/navbar.css" />
     <link rel="icon" type="image/png" href="./images/shopping-cart-solid.png" />
+    <link rel="stylesheet" href="./pages/footer/styles.css" />
     <title>E-Commerce</title>
   </head>
   <body>
@@ -97,14 +107,13 @@
 
     <section class="four-section">
       <div class="container">
+        <img src="./images/JPL.jpg" alt="" />
         <div class="text-content">
           <h2>Categories</h2>
           <h1>Enhance Your <br />Music Experience</h1>
           <button class="btn">Buy Now!</button>
         </div>
-        <div class="product-img">
-          <img src="./images/product4.jpg" alt="Product Image" />
-        </div>
+        <div class="product-img"></div>
       </div>
     </section>
 
@@ -134,7 +143,46 @@
         <div class="section title">
           <h2>New Arrival</h2>
         </div>
-        <div id=""></div>
+        <div id="images">
+          <div class="main-img">
+            <img src="./images/plystation5.jpg" alt="" />
+            <div class="overlay-text">
+              <h2>PlayStation 5</h2>
+              <p>Black and white version of the PS5 coming out on sale.</p>
+              <a href="#" class="shop-btn">Shop Now</a>
+            </div>
+          </div>
+
+          <div class="women-collection">
+            <div class="collection-img">
+              <img src="./images/woman.jpg" alt="" />
+              <div class="overlay-text">
+                <h2>Women's Collections</h2>
+                <p>Featured woman collections that give you another vibe.</p>
+                <a href="#" class="shop-btn">Shop Now</a>
+              </div>
+            </div>
+
+            <div class="sub-images">
+              <div class="sub-img">
+                <img src="./images/spekars.jpeg" alt="" />
+                <div class="overlay-text">
+                  <h3>Speakers</h3>
+                  <p>Amazon wireless speakers</p>
+                  <a href="#" class="shop-btn">Shop Now</a>
+                </div>
+              </div>
+              <div class="sub-img">
+                <img src="./images/perfem.jpg" alt="" />
+                <div class="overlay-text">
+                  <h3>Perfume</h3>
+                  <p>Gucci Intense Oud EDP</p>
+                  <a href="#" class="shop-btn">Shop Now</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -172,7 +220,12 @@
       </div>
     </section>
 
+    <footer id="footer"></footer>
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./pages/cart/navbar.js"></script>
     <script src="./index.js"></script>
+    <script src="./pages/footer/footer.js"></script>
   </body>
 </html>

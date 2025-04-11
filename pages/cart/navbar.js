@@ -1,5 +1,6 @@
 // Update links based on environment
 document.addEventListener("DOMContentLoaded", function () {
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const isLocal =
     window.location.hostname === "localhost" ||
     window.location.protocol === "file:" ||
@@ -18,8 +19,12 @@ document.addEventListener("DOMContentLoaded", function () {
       <ul class="nav-links">
         <li><a href="${basePath}/index.html">Home</a></li>
         <li><a href="#contact">Contact</a></li>
-        <li><a href="${basePath}/pages/SingIn/SignIn.html">Login</a></li>
-        <li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>
+        <li><a href="#about">About</a></li>
+        ${
+          currentUser
+            ? `<li><a style="cursor: pointer;" onclick="handleLogOut()">Log Out</a></li>`
+            : `<li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>`
+        }
       </ul>
       <div class="icons">
         <a href="${basePath}/pages/wishlist/wishlist.html" id="wishlistLink" class="icon fav wishlist-icon"
@@ -36,12 +41,12 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("navbar-container").innerHTML = navbarHTML;
   const hamburger = document.querySelector(".hamburger");
   const navLinks = document.querySelector(".nav-links");
-  
+
   hamburger.addEventListener("click", () => {
     hamburger.classList.toggle("active");
     navLinks.classList.toggle("active");
   });
-  
+
   navLinks.addEventListener("click", (e) => {
     if (e.target.tagName === "A") {
       hamburger.classList.remove("active");
@@ -49,31 +54,69 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   updateCartCount();
+  updateWatchlistCount();
 });
 
-function updateCartCount() {
-  const headerCartCount = document.getElementById('headerCartCount');
+window.updateCartCount = function () {
+  const headerCartCount = document.getElementById("headerCartCount");
   // // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
   // const userData = JSON.parse(localStorage.getItem('wishlist'));
   // // const count = userData.users.wishlist.length;
   // const count = userData.length;
-  
-  
+
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-  
+
   if (!currentUser) {
-    
-    
+    //alert("Please log in");
     return;
   }
-  
+
   let currentUsers = JSON.parse(localStorage.getItem("users"));
   for (let i = 0; i < currentUsers.length; i++) {
     let userName = currentUsers[i].userName;
     let email = currentUsers[i].email;
-    
+
     if (currentUser == userName || currentUser == email) {
       headerCartCount.textContent = currentUsers[i].cart.length;
-      }
+    }
+  }
+};
+
+window.updateWatchlistCount = function () {
+  const headerWatchlistCount = document.getElementById("headerWishlistCount");
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+  if (!currentUser) {
+    // alert("Please log in");
+    return;
+  }
+
+  let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+  for (let i = 0; i < currentUsers.length; i++) {
+    let userName = currentUsers[i].userName;
+    let email = currentUsers[i].email;
+
+    if (currentUser === userName || currentUser === email) {
+      headerWatchlistCount.textContent = currentUsers[i].wishlist
+        ? currentUsers[i].wishlist.length
+        : 0;
+    }
+  }
+};
+
+function handleLogOut() {
+  sessionStorage.clear();
 }
+//alerts =========================
+
+// Show info alert with SweetAlert
+function showInfoAlert(message) {
+  Swal.fire({
+    icon: "info",
+    title: "Info",
+    text: message,
+    confirmButtonColor: "#0d6efd",
+    timer: 2000,
+  });
 }
