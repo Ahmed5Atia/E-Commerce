@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const basePath = isLocal ? "" : "https://ahmed5atia.github.io//E-Commerce/";
 
-  const navbarHTML = `
+  const footerHTML = `
   <div class="footer">
       <div class="footer2">
         <h2>Exclusive Price</h2>
@@ -29,11 +29,11 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="footer2">
         <h3>Account</h3>
         <div class="links">
-          <a href="#">My Account</a>
-          <a href="#">Login/Register</a>
-          <a href="#">Cart</a>
-          <a href="#">Wishlist</a>
-          <a href="#">Contact</a>
+          <a href="${basePath}/index.html">My Account</a>
+          <a href="${basePath}/pages/RegisterPage/Registration.html">Login/Register</a>
+          <a href="${basePath}/pages/cart/cart.html">Cart</a>
+          <a href="${basePath}/pages/wishlist/wishlist.html">Wishlist</a>
+          <a href="">Contact</a>
         </div>
       </div>
 
@@ -49,10 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
         <h3>Download App</h3>
         <p>Save $3 with App</p>
         <p>
-          <a href="#"><i class="bi bi-google-play"></i> Google Play</a>
+          <a href="https://play.google.com/store" target="_blank"><i class="bi bi-google-play"></i> Google Play</a>
         </p>
         <p>
-          <a href="#"><i class="bi bi-apple"></i> App Store</a>
+          <a href="https://www.apple.com/eg-ar/app-store/" target="_blank"><i class="bi bi-apple"></i> App Store</a>
         </p>
       </div>
 
@@ -62,5 +62,5 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
   `;
 
-  document.getElementById("footer").innerHTML = navbarHTML;
+  document.getElementById("footer").innerHTML = footerHTML;
 });
