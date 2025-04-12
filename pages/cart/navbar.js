@@ -53,55 +53,51 @@ document.addEventListener("DOMContentLoaded", function () {
       navLinks.classList.remove("active");
     }
   });
-  updateCartCount();
-  updateWatchlistCount();
+  updateNavCartCount();
+  updateNavWatchlistCount();
 });
 
-window.updateCartCount = function () {
+window.updateNavCartCount = function () {
   const headerCartCount = document.getElementById("headerCartCount");
-  // // const userData = JSON.parse(localStorage.getItem('userData')) || JSON.parse(localStorage.getItem('wishlist')) || { users: { wishlist: [] } };
-  // const userData = JSON.parse(localStorage.getItem('wishlist'));
-  // // const count = userData.users.wishlist.length;
-  // const count = userData.length;
+  if (!headerCartCount) return;
 
-  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-
+  const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   if (!currentUser) {
-    //alert("Please log in");
+    headerCartCount.textContent = 0;
     return;
   }
 
-  let currentUsers = JSON.parse(localStorage.getItem("users"));
-  for (let i = 0; i < currentUsers.length; i++) {
-    let userName = currentUsers[i].userName;
-    let email = currentUsers[i].email;
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find(
+    (u) => u.userName === currentUser || u.email === currentUser
+  );
 
-    if (currentUser == userName || currentUser == email) {
-      headerCartCount.textContent = currentUsers[i].cart.length;
-    }
+  if (user && user.cart) {
+    headerCartCount.textContent = user.cart.length;
+  } else {
+    headerCartCount.textContent = 0;
   }
 };
 
-window.updateWatchlistCount = function () {
-  const headerWatchlistCount = document.getElementById("headerWishlistCount");
-  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+window.updateNavWatchlistCount = function () {
+  const headerWishlistCount = document.getElementById("headerWishlistCount");
+  if (!headerWishlistCount) return;
 
+  const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   if (!currentUser) {
-    // alert("Please log in");
+    headerWishlistCount.textContent = 0;
     return;
   }
 
-  let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find(
+    (u) => u.userName === currentUser || u.email === currentUser
+  );
 
-  for (let i = 0; i < currentUsers.length; i++) {
-    let userName = currentUsers[i].userName;
-    let email = currentUsers[i].email;
-
-    if (currentUser === userName || currentUser === email) {
-      headerWatchlistCount.textContent = currentUsers[i].wishlist
-        ? currentUsers[i].wishlist.length
-        : 0;
-    }
+  if (user && user.wishlist) {
+    headerWishlistCount.textContent = user.wishlist.length;
+  } else {
+    headerWishlistCount.textContent = 0;
   }
 };
 

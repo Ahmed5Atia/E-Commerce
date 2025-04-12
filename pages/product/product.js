@@ -175,7 +175,7 @@ addToCart.onclick = function () {
     }
   }
   localStorage.setItem("users", JSON.stringify(currentUsers));
-  window.updateCartCount();
+  window.updateNavCartCount();
   /*-----------*/
 };
 function updateCartCount(c) {
@@ -225,7 +225,7 @@ wishlistButton.onclick = function () {
     }
   }
   localStorage.setItem("users", JSON.stringify(currentUsers));
-  window.updateWatchlistCount();
+  window.updateNavWatchlistCount();
 };
 
 // Show success alert with SweetAlert

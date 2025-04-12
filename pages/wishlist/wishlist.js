@@ -663,6 +663,7 @@ function renderProductCard(product, container, isWishlist = false) {
       if (!userFound.cart.includes(productId)) {
         userFound.cart.push(productId);
         localStorage.setItem("users", JSON.stringify(users));
+        window.updateNavCartCount();
         showSuccessAlert(
           "The product has been successfully added to the cart!"
         );
@@ -735,6 +736,7 @@ function addToWishlist(productId, productTitle) {
   generateRecommendations();
   showSuccessAlert(`${productTitle} added to wishlist!`);
   animateHeartIcon();
+  window.updateNavWatchlistCount();
 }
 
 function removeFromWishlist(productId, productTitle) {
@@ -752,6 +754,7 @@ function removeFromWishlist(productId, productTitle) {
       saveWishlist();
       displayWishlist();
       generateRecommendations();
+      window.updateNavWatchlistCount();
       showSuccessAlert(`${productTitle} removed from wishlist!`);
     }
   });

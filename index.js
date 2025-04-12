@@ -97,10 +97,10 @@ function addEventListeners(containerId) {
         if (!userFound.cart.includes(productId)) {
           userFound.cart.push(productId);
           localStorage.setItem("users", JSON.stringify(users));
+          window.updateNavCartCount();
           showSuccessAlert(
             "The product has been successfully added to the cart!"
           );
-          window.updateCartCount();
         } else {
           showInfoAlert("This product is already in the cart!");
         }
@@ -135,7 +135,7 @@ function addEventListeners(containerId) {
             "The product has been successfully added to the Favorit!"
           );
           favorite.style.color = "red";
-          window.updateWatchlistCount();
+          window.updateNavWatchlistCount();
         } else {
           //remove form favorit list
           userFound.wishlist = userFound.wishlist.filter(
@@ -146,7 +146,7 @@ function addEventListeners(containerId) {
             "The product has been removed from favorites successfully!"
           );
           favorite.style.color = "";
-          window.updateWatchlistCount();
+          window.updateNavWatchlistCount();
         }
       } else {
         showErrorAlert("You must log in first");
