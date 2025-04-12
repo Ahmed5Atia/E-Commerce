@@ -22,11 +22,6 @@ function loadCartItems() {
     console.log("No user logged in, fetching from JSON");
     fetchFromJson();
   } else {
- /*    if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
-      currentUser = currentUser.slice(1, -1);
-    }
-    console.log("Cleaned Current User:", currentUser); */
-
     let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
     console.log("Users from localStorage:", currentUsers);
     let items = [];
@@ -79,41 +74,70 @@ function processCartItems(items) {
   }
 
   let total = 0;
+  // Object to track item quantities
+  let itemQuantities = {};
 
+  // Count occurrences of each item
   items.forEach((item) => {
+    itemQuantities[item] = (itemQuantities[item] || 0) + 1;
+  });
+  console.log("Item quantities:", itemQuantities);
+
+  // Process each unique item
+  Object.keys(itemQuantities).forEach((itemId) => {
+    let quantity = itemQuantities[itemId];
+
     let xml = new XMLHttpRequest();
-    xml.open("GET", `https://dummyjson.com/products/${item}`, true);
+    xml.open("GET", `https://dummyjson.com/products/${itemId}`, true);
     xml.send();
 
     xml.addEventListener("loadend", () => {
       if (xml.status === 200) {
         let data = JSON.parse(xml.response);
         let price = data.price;
-        let initialSubtotal = price * 1;
+        let initialSubtotal = price * quantity;
 
         total += initialSubtotal;
         updateCartTotal(total);
 
-        let row = document.createElement("tr");
-        row.innerHTML = `
-          <td>
-            <div class="imageTitle">
-              <div class="image">
-                <img src="${data.images[0]}" alt="" id="trans" />
-              </div>
-              <p>${data.title}</p>
-            </div>
-          </td>
-          <td><p class="price">${price}$</p></td>
-          <td><input type="number" class="quantity" data-price="${price}" min="1" value="1"/></td>
-          <td class="subtotal">${initialSubtotal}$</td>
-          <td><button class="delete-btn" data-id="${item}">X</button></td>`;
+        // Check if the item already exists in the table
+        let existingRow = Array.from(cartItems.querySelectorAll("tr")).find(
+          (row) =>
+            row.querySelector(".delete-btn")?.getAttribute("data-id") === itemId
+        );
 
-        cartItems.appendChild(row);
-        // Attach listeners immediately after adding each row
-        attachEventListenersToRow(row);
+        if (existingRow) {
+          // Update existing row's quantity and subtotal
+          let quantityInput = existingRow.querySelector(".quantity");
+          let newQuantity = parseInt(quantityInput.value) + quantity;
+          quantityInput.value = newQuantity;
+
+          let subtotalCell = existingRow.querySelector(".subtotal");
+          let subtotal = price * newQuantity;
+          subtotalCell.textContent = `${subtotal.toFixed(2)}$`;
+        } else {
+          // Create new row for the item
+          let row = document.createElement("tr");
+          row.innerHTML = `
+            <td>
+              <div class="imageTitle">
+                <div class="image">
+                  <img src="${data.images[0]}" alt="" id="trans" />
+                </div>
+                <p>${data.title}</p>
+              </div>
+            </td>
+            <td><p class="price">${price}$</p></td>
+            <td><input type="number" class="quantity" data-price="${price}" min="1" value="${quantity}"/></td>
+            <td class="subtotal">${initialSubtotal.toFixed(2)}$</td>
+            <td><button class="delete-btn" data-id="${itemId}">X</button></td>`;
+
+          cartItems.appendChild(row);
+          // Attach listeners immediately after adding each row
+          attachEventListenersToRow(row);
+        }
       } else {
-        console.error(`Failed to load product ${item}:`, xml.status);
+        console.error(`Failed to load product ${itemId}:`, xml.status);
       }
     });
   });
@@ -155,22 +179,36 @@ function recalculateCartTotal() {
 function deleteItem(event) {
   if (event.target.classList.contains("delete-btn")) {
     let row = event.target.closest("tr");
-    let subtotal = parseFloat(
-      row.querySelector(".subtotal").textContent.replace("$", "")
-    );
     let itemId = event.target.getAttribute("data-id");
+    let quantityInput = row.querySelector(".quantity");
+    let quantity = parseInt(quantityInput.value);
+    let price = parseFloat(
+      row.querySelector(".price").textContent.replace("$", "")
+    );
     console.log("Deleting item ID:", itemId);
 
-    row.remove();
+    if (quantity > 1) {
+      // Decrease quantity and update subtotal
+      quantityInput.value = quantity - 1;
+      let subtotal = price * (quantity - 1);
+      row.querySelector(".subtotal").textContent = `${subtotal.toFixed(2)}$`;
+      recalculateCartTotal();
+    } else {
+      // Remove row if quantity is 1
+      let subtotal = parseFloat(
+        row.querySelector(".subtotal").textContent.replace("$", "")
+      );
+      row.remove();
 
-    if (!document.querySelector("#tableBody tr")) {
-      console.log("Cart is now empty");
-      displayEmptyCart();
+      if (!document.querySelector("#tableBody tr")) {
+        console.log("Cart is now empty");
+        displayEmptyCart();
+      }
+
+      let total = parseFloat(document.getElementById("cart-total").textContent);
+      total -= subtotal;
+      updateCartTotal(total);
     }
-
-    let total = parseFloat(document.getElementById("cart-total").textContent);
-    total -= subtotal;
-    updateCartTotal(total);
 
     let currentUser = sessionStorage.getItem("currentUser");
     if (currentUser) {
@@ -183,10 +221,6 @@ function deleteItem(event) {
 
 function removeFromLocalStorage(itemId) {
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-  /*   if (currentUser.startsWith('"') && currentUser.endsWith('"')) {
-    currentUser = currentUser.slice(1, -1);
-  } */
-
   let currentUsers = JSON.parse(localStorage.getItem("users")) || [];
   console.log("Before removal - Users:", currentUsers);
 
@@ -196,15 +230,16 @@ function removeFromLocalStorage(itemId) {
       currentUser === currentUsers[i].email
     ) {
       if (currentUsers[i].cart && currentUsers[i].cart.length > 0) {
-        // Ensure itemId matches cart items (convert to string if needed)
-        currentUsers[i].cart = currentUsers[i].cart.filter(
-          (id) => String(id) !== String(itemId)
-        );
-        localStorage.setItem("users", JSON.stringify(currentUsers));
-        console.log(
-          `After removal - Updated cart for ${currentUser}:`,
-          currentUsers[i].cart
-        );
+        // Remove only one instance of the item
+        let index = currentUsers[i].cart.indexOf(String(itemId));
+        if (index !== -1) {
+          currentUsers[i].cart.splice(index, 1);
+          localStorage.setItem("users", JSON.stringify(currentUsers));
+          console.log(
+            `After removal - Updated cart for ${currentUser}:`,
+            currentUsers[i].cart
+          );
+        }
       } else {
         console.log("Cart is empty or undefined, no removal needed");
       }

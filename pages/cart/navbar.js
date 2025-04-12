@@ -1,11 +1,12 @@
 // Update links based on environment
 document.addEventListener("DOMContentLoaded", function () {
+  let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const isLocal =
     window.location.hostname === "localhost" ||
     window.location.protocol === "file:" ||
     window.location.host === "127.0.0.1:5500";
 
-  const basePath = isLocal ? "" : "https://ahmed5atia.github.io//E-Commerce/";
+  const basePath = isLocal ? "" : "https://ahmed5atia.github.io/E-Commerce";
 
   const navbarHTML = `
   <nav class="navbar">
@@ -19,7 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
         <li><a href="${basePath}/index.html">Home</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#about">About</a></li>
-        <li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>
+        ${
+          currentUser
+            ? `<li><a style="cursor: pointer;" onclick="handleLogOut()">Log Out</a></li>`
+            : `<li><a href="${basePath}/pages/RegisterPage/Registration.html">Sign Up</a></li>`
+        }
       </ul>
       <div class="icons">
         <a href="${basePath}/pages/wishlist/wishlist.html" id="wishlistLink" class="icon fav wishlist-icon"
@@ -62,7 +67,7 @@ window.updateCartCount = function () {
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   if (!currentUser) {
-    alert("Please log in");
+    //alert("Please log in");
     return;
   }
 
@@ -82,7 +87,7 @@ window.updateWatchlistCount = function () {
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   if (!currentUser) {
-    alert("Please log in");
+    // alert("Please log in");
     return;
   }
 
@@ -100,6 +105,9 @@ window.updateWatchlistCount = function () {
   }
 };
 
+function handleLogOut() {
+  sessionStorage.clear();
+}
 //alerts =========================
 
 // Show info alert with SweetAlert
