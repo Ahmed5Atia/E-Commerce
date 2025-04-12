@@ -15,53 +15,14 @@
 }
 
 #first-section {
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-  gap: 15px;
   width: 100%;
   min-height: 300px;
   margin: 3% 0;
 }
-
-#category {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 15px;
-  overflow-y: auto;
-  max-height: 344px;
-}
-
-#category ul {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-}
-
-#category ul li {
-  cursor: pointer;
-  list-style: none;
-  padding: 12px 0;
-  text-align: left;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid #eee;
-}
-
-#category ul li:hover {
-  background-color: #f8f8f8;
-}
-
-.line {
-  width: 2px;
-  height: 100%;
-  background-color: #ececec;
-  margin: 0 15px;
-}
-
 #carousel-container {
   position: relative;
   height: 344px;
-  margin-right: 2%;
+  margin: 2%;
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -417,18 +378,30 @@
 
 /* *********====================== */
 /* four section */
+.four-section {
+  padding: 40px 0;
+}
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 60px 20px;
+  background-image: url(./images/JPL.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  min-height: 400px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  color: #fff;
 }
 
 .text-content {
-  flex: 1;
+  max-width: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .text-content h2 {
@@ -456,16 +429,6 @@
 
 .btn:hover {
   background-color: #00b300;
-}
-
-.product-img {
-  flex: 1;
-}
-
-.product-img img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
 }
 
 #images {
@@ -747,6 +710,30 @@
   .sub-img img {
     height: 300px;
   }
+
+  .container {
+    min-height: 500px;
+    padding: 40px 15px;
+  }
+
+  .text-content {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .text-content h1 {
+    font-size: 36px;
+  }
+
+  .timer {
+    justify-content: center;
+  }
+
+  .time {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -827,5 +814,32 @@
   .shop-btn {
     padding: 6px 12px;
     font-size: 12px;
+  }
+  .container {
+    min-height: 450px;
+    padding: 30px 10px;
+  }
+
+  .text-content h1 {
+    font-size: 28px;
+  }
+
+  .timer {
+    gap: 10px;
+  }
+
+  .time {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .label {
+    font-size: 10px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
   }
 }
