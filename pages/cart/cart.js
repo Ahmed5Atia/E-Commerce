@@ -191,8 +191,13 @@ function deleteItem(event) {
       // Decrease quantity and update subtotal
       quantityInput.value = quantity - 1;
       let subtotal = price * (quantity - 1);
+      quantity--;
+      console.log(quantity);
+
       row.querySelector(".subtotal").textContent = `${subtotal.toFixed(2)}$`;
+      removeFromLocalStorage(itemId);
       recalculateCartTotal();
+      return;
     } else {
       // Remove row if quantity is 1
       let subtotal = parseFloat(
@@ -230,8 +235,7 @@ function removeFromLocalStorage(itemId) {
       currentUser === currentUsers[i].email
     ) {
       if (currentUsers[i].cart && currentUsers[i].cart.length > 0) {
-        // Remove only one instance of the item
-        let index = currentUsers[i].cart.indexOf(String(itemId));
+        let index = currentUsers[i].cart.indexOf(Number(itemId));
         if (index !== -1) {
           currentUsers[i].cart.splice(index, 1);
           localStorage.setItem("users", JSON.stringify(currentUsers));

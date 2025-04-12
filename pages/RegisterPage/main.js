@@ -5,7 +5,7 @@ document.getElementById("registerForm").onsubmit = function () {
   let nameRegex = /^[a-zA-Z\s]{3,}$/;
   let emailRegex =
     /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  let passwordRegex = /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d]{6,}$/;
+  let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
