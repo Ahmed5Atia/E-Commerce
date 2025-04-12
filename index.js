@@ -308,27 +308,6 @@ prev.addEventListener("click", () => {
   }
 });
 
-///display categories on ul from prevous function ajax to get all categories=======================
-function renderCategoryList(categories, containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-
-  container.innerHTML = "";
-  const ul = document.createElement("ul");
-  const categoryFragment = document.createDocumentFragment();
-
-  categories.forEach((category) => {
-    let li = document.createElement("li");
-    li.textContent = category;
-    categoryFragment.appendChild(li);
-  });
-
-  ul.appendChild(categoryFragment);
-  container.appendChild(ul);
-}
-// call function get categories====================================================
-fetchCategories((categories) => renderCategoryList(categories, "category"));
-
 //countdown in carousel product section ==============================================
 let now = new Date();
 let startCountDate = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
