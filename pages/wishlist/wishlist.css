@@ -266,26 +266,6 @@ main {
 }
 
 @media (max-width: 768px) {
-  header {
-      flex-direction: column;
-      gap: 15px;
-      padding: 15px;
-  }
-  
-  nav ul {
-      flex-wrap: wrap;
-      justify-content: center;
-  }
-  
-  .header-actions {
-      width: 100%;
-      justify-content: space-between;
-  }
-  
-  .search-bar input {
-      width: 100%;
-  }
-  
   main {
       padding: 20px;
   }

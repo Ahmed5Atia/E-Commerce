@@ -23,39 +23,29 @@ let recommendations = [];
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
-// Load user data from localStorage
-const savedData = localStorage.getItem('userData');
-if (savedData) {
-    userData = JSON.parse(savedData);
-} else {
-    // Initialize with your structure if no data exists
-    localStorage.setItem('userData', JSON.stringify(userData));
-}
-    
-loadWishlist();
-fetchProducts();
-
-// Set up search functionality
-searchInput.addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    if (searchTerm.length > 2) {
-        searchProducts(searchTerm);
-    } else if (searchTerm.length === 0) {
-        displayWishlist();
+    // Load user data from localStorage
+    const savedData = localStorage.getItem('userData');
+    if (savedData) {
+        userData = JSON.parse(savedData);
+    } else {
+        localStorage.setItem('userData', JSON.stringify(userData));
     }
-});
 
-// Set up "See All" link
-seeAllLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    displayAllProducts();
-});
+    loadWishlist();
+    fetchProducts();
 
-// Set up header wishlist icon click
-headerWishlist.addEventListener('click', () => {
-    // Scroll to wishlist section
-    document.querySelector('.wishlist-header').scrollIntoView({ behavior: 'smooth' });
-});
+    if (seeAllLink) {
+        seeAllLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            displayAllProducts();
+        });
+    }
+
+    if (headerWishlist) {
+        headerWishlist.addEventListener('click', () => {
+            document.querySelector('.wishlist-header').scrollIntoView({ behavior: 'smooth' });
+        });
+    }
 });
 
 // Load wishlist from userData
@@ -72,28 +62,36 @@ function saveWishlist() {
 
 // Update all wishlist count displays
 function updateWishlistCount() {
-const count = userData.users.wishlist.length;
-wishlistCount.textContent = count;
-itemCount.textContent = count;
-headerWishlistCount.textContent = count;
+    const count = userData.users.wishlist.length;
+    wishlistCount.textContent = count;
+    itemCount.textContent = count;
+    if (headerWishlistCount) headerWishlistCount.textContent = count;
 
-// Pulse animation when count changes
-if (count > 0) {
-    headerWishlistCount.classList.add('pulse');
-    setTimeout(() => {
-        headerWishlistCount.classList.remove('pulse');
-    }, 500);
-}
+    if (count > 0 && headerWishlistCount) {
+        headerWishlistCount.classList.add('pulse');
+        setTimeout(() => {
+            headerWishlistCount.classList.remove('pulse');
+        }, 500);
+    }
 }
 
-// Fetch products from API using XMLHttpRequest
+// Fetch products from API
 function fetchProducts() {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://fakestoreapi.com/products');
-    
-    xhr.onload = function() {
+    xhr.open('GET', 'https://dummyjson.com/products/');
+
+    xhr.onload = function () {
         if (xhr.status === 200) {
-            allProducts = JSON.parse(xhr.responseText);
+            const response = JSON.parse(xhr.responseText);
+            allProducts = response.products.map(product => {
+                if (product.thumbnail && !product.thumbnail.startsWith('http')) {
+                    product.thumbnail = `https://dummyjson.com${product.thumbnail}`;
+                }
+                if (product.image && !product.image.startsWith('http')) {
+                    product.image = `https://dummyjson.com${product.image}`;
+                }
+                return product;
+            });
             generateRecommendations();
             displayWishlist();
         } else {
@@ -102,112 +100,56 @@ function fetchProducts() {
             recommendationsContainer.innerHTML = '<div class="empty-wishlist">Failed to load recommendations.</div>';
         }
     };
-    
-    xhr.onerror = function() {
+
+    xhr.onerror = function () {
         console.error('Request failed');
         showErrorAlert('Network error. Please check your connection.');
         recommendationsContainer.innerHTML = '<div class="empty-wishlist">Network error.</div>';
     };
-    
+
     xhr.send();
 }
 
-// Generate recommendations (excluding wishlist items)
+// Generate recommendations
 function generateRecommendations() {
-    // Filter out items already in wishlist
-    const availableProducts = allProducts.filter(product => 
+    const availableProducts = allProducts.filter(product =>
         !userData.users.wishlist.some(item => item.id === product.id)
     );
-    
-    // Get random 4 products as recommendations
+
     recommendations = [];
     const maxRecommendations = Math.min(4, availableProducts.length);
-    
+
     for (let i = 0; i < maxRecommendations; i++) {
         const randomIndex = Math.floor(Math.random() * availableProducts.length);
         recommendations.push(availableProducts[randomIndex]);
         availableProducts.splice(randomIndex, 1);
     }
-    
+
     displayRecommendations();
 }
 
 // Display wishlist items
 function displayWishlist() {
-wishlistContainer.innerHTML = '';
-userData.users.wishlist.forEach(product => {
-    const discount = Math.random() > 0.5;
-    const originalPrice = (product.price * (1 + Math.random() * 0.5)).toFixed(2);
-    
-    const productElement = document.createElement('div');
-    productElement.className = 'wishlist-item';
-    productElement.innerHTML = `
-        <div class="item-heart" onclick="removeFromWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')">
-            <i class="fas fa-heart"></i>
-        </div>
-        <img src="${product.image}" alt="${product.title}">
-        <h3>${product.title}</h3>
-        <div class="price">
-            ${discount ? `<span class="original-price">$${originalPrice}</span>` : ''}
-            <span class="discounted-price">$${product.price}</span>
-        </div>
-        <button>Add to Cart</button>
-    `;
-    wishlistContainer.appendChild(productElement);
-});
-}
+    wishlistContainer.innerHTML = '';
 
-// Display recommendations
-function displayRecommendations() {
-if (recommendations.length === 0) {
-    recommendationsContainer.innerHTML = '<div class="empty-wishlist">No recommendations available at this time.</div>';
-    return;
-}
+    if (userData.users.wishlist.length === 0) {
+        wishlistContainer.innerHTML = '<div class="empty-wishlist">Your wishlist is empty</div>';
+        return;
+    }
 
-recommendationsContainer.innerHTML = '';
-recommendations.forEach(product => {
-    const discount = Math.random() > 0.5;
-    const originalPrice = (product.price * (1 + Math.random() * 0.5)).toFixed(2);
-    const isInWishlist = userData.users.wishlist.some(item => item.id === product.id);
-    
-    const productElement = document.createElement('div');
-    productElement.className = 'wishlist-item';
-    productElement.innerHTML = `
-    <div class="item-heart" onclick="${isInWishlist ? 
-        `removeFromWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')` : 
-        `addToWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')`}">
-        <i class="fas ${isInWishlist ? 'fa-heart' : 'fa-heart'}"></i>
-    </div>
-    <img src="${product.image}" alt="${product.title}">
-    <h3>${product.title}</h3>
-    <div class="price">
-        ${discount ? `<span class="original-price">$${originalPrice}</span>` : ''}
-        <span class="discounted-price">$${product.price}</span>
-    </div>
-    <button>Add to Cart</button>
-`;
-    recommendationsContainer.appendChild(productElement);
-});
-}
-
-// Display all products
-function displayAllProducts() {
-recommendationsContainer.innerHTML = '<div class="loading">Loading all products...</div>';
-
-setTimeout(() => {
-    recommendationsContainer.innerHTML = '';
-    allProducts.forEach(product => {
-    if (!userData.users.wishlist.some(item => item.id === product.id)) {
+    userData.users.wishlist.forEach(product => {
         const discount = Math.random() > 0.5;
         const originalPrice = (product.price * (1 + Math.random() * 0.5)).toFixed(2);
-        
+
         const productElement = document.createElement('div');
         productElement.className = 'wishlist-item';
         productElement.innerHTML = `
-            <div class="item-heart" onclick="addToWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')">
+            <div class="item-heart" onclick="removeFromWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')">
                 <i class="fas fa-heart"></i>
             </div>
-            <img src="${product.image}" alt="${product.title}">
+            <img src="${product.thumbnail || product.image}" 
+            alt="${product.title}" 
+            onerror="this.onerror=null;this.src='https://via.placeholder.com/150?text=No+Image';">
             <h3>${product.title}</h3>
             <div class="price">
                 ${discount ? `<span class="original-price">$${originalPrice}</span>` : ''}
@@ -215,124 +157,102 @@ setTimeout(() => {
             </div>
             <button>Add to Cart</button>
         `;
+        wishlistContainer.appendChild(productElement);
+    });
+}
+
+// Display recommendations
+function displayRecommendations() {
+    if (recommendations.length === 0) {
+        recommendationsContainer.innerHTML = '<div class="empty-wishlist">No recommendations available at this time.</div>';
+        return;
+    }
+
+    recommendationsContainer.innerHTML = '';
+    recommendations.forEach(product => {
+        const discount = Math.random() > 0.5;
+        const originalPrice = (product.price * (1 + Math.random() * 0.5)).toFixed(2);
+        const isInWishlist = userData.users.wishlist.some(item => item.id === product.id);
+
+        const productElement = document.createElement('div');
+        productElement.className = 'wishlist-item';
+        productElement.innerHTML = `
+        <div class="item-heart" onclick="${isInWishlist ?
+                `removeFromWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')` :
+                `addToWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')`}">
+            <i class="fas ${isInWishlist ? 'fa-heart' : 'fa-heart'}"></i>
+        </div>
+        <img src="${product.thumbnail || product.image}" 
+        alt="${product.title}" 
+        onerror="this.onerror=null;this.src='https://via.placeholder.com/150?text=No+Image';">
+        <h3>${product.title}</h3>
+        <div class="price">
+            ${discount ? `<span class="original-price">$${originalPrice}</span>` : ''}
+            <span class="discounted-price">$${product.price}</span>
+        </div>
+        <button>Add to Cart</button>
+    `;
         recommendationsContainer.appendChild(productElement);
-    }
-    });
-    
-    if (recommendationsContainer.children.length === 0) {
-        recommendationsContainer.innerHTML = '<div class="empty-wishlist">No products available.</div>';
-    }
-}, 500);
-}
-
-// Search products
-function searchProducts(term) {
-const filtered = allProducts.filter(product => 
-    product.title.toLowerCase().includes(term) ||
-    product.description.toLowerCase().includes(term)
-);
-
-recommendationsContainer.innerHTML = '';
-
-if (filtered.length === 0) {
-    recommendationsContainer.innerHTML = '<div class="empty-wishlist">No products found matching your search.</div>';
-    return;
-}
-
-filtered.forEach(product => {
-const isInWishlist = userData.users.wishlist.some(item => item.id === product.id);
-const productElement = document.createElement('div');
-productElement.className = 'wishlist-item';
-productElement.innerHTML = `
-    <div class="item-heart" onclick="${isInWishlist ? 
-        `removeFromWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')` : 
-        `addToWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')`}">
-        <i class="fas ${isInWishlist ? 'fa-heart' : 'fa-heart-o'}"></i>
-    </div>
-    <img src="${product.image}" alt="${product.title}">
-    <h3>${product.title}</h3>
-    <div class="price">
-        <span class="discounted-price">$${product.price}</span>
-    </div>
-    <button>Add to Cart</button>
-`;
-recommendationsContainer.appendChild(productElement);
-});
-}
-
-// Show success alert with SweetAlert
-function showSuccessAlert(message) {
-    Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: message,
-        confirmButtonColor: '#000',
-        timer: 2000
     });
 }
 
-// Show error alert with SweetAlert
-function showErrorAlert(message) {
-    Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: message,
-        confirmButtonColor: '#e63946'
-    });
-}
+// Display all products
+function displayAllProducts() {
+    recommendationsContainer.innerHTML = '<div class="loading">Loading all products...</div>';
 
-// Show info alert with SweetAlert
-function showInfoAlert(message) {
-    Swal.fire({
-        icon: 'info',
-        title: 'Info',
-        text: message,
-        confirmButtonColor: '#0d6efd',
-        timer: 2000
-    });
-}
+    setTimeout(() => {
+        recommendationsContainer.innerHTML = '';
+        allProducts.forEach(product => {
+            if (!userData.users.wishlist.some(item => item.id === product.id)) {
+                const discount = Math.random() > 0.5;
+                const originalPrice = (product.price * (1 + Math.random() * 0.5)).toFixed(2);
 
-// Add product to wishlist
-function addToWishlist(productId, productTitle) {
-if (userData.users.wishlist.some(item => item.id === productId)) {
-    showInfoAlert('This product is already in your wishlist!');
-    return;
-}
+                const productElement = document.createElement('div');
+                productElement.className = 'wishlist-item';
+                productElement.innerHTML = `
+                    <div class="item-heart" onclick="addToWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <img src="${product.thumbnail || product.image}" 
+                alt="${product.title}" 
+                onerror="this.onerror=null;this.src='https://via.placeholder.com/150?text=No+Image';">
+                    <h3>${product.title}</h3>
+                    <div class="price">
+                        ${discount ? `<span class="original-price">$${originalPrice}</span>` : ''}
+                        <span class="discounted-price">$${product.price}</span>
+                    </div>
+                    <button>Add to Cart</button>
+                `;
+                recommendationsContainer.appendChild(productElement);
+            }
+        });
 
-let productToAdd = allProducts.find(product => product.id === productId);
-
-if (productToAdd) {
-    userData.users.wishlist.push(productToAdd);
-    saveWishlist();
-    displayWishlist();
-    generateRecommendations();
-    showSuccessAlert(`${productTitle} added to wishlist!`);
-    
-    // Animate heart icon
-    animateHeartIcon();
-} else {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `https://fakestoreapi.com/products/${productId}`, true);
-    
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            productToAdd = JSON.parse(xhr.responseText);
-            userData.users.wishlist.push(productToAdd);
-            saveWishlist();
-            displayWishlist();
-            generateRecommendations();
-            showSuccessAlert(`${productToAdd.title} added to wishlist!`);
-            
-            // Animate heart icon
-            animateHeartIcon();
+        if (recommendationsContainer.children.length === 0) {
+            recommendationsContainer.innerHTML = '<div class="empty-wishlist">No products available.</div>';
         }
-    };
-    
-    xhr.send();
-}
+    }, 500);
 }
 
-// Remove product from wishlist
+// Add to wishlist
+function addToWishlist(productId, productTitle) {
+    if (userData.users.wishlist.some(item => item.id === productId)) {
+        showInfoAlert('This product is already in your wishlist!');
+        return;
+    }
+
+    let productToAdd = allProducts.find(product => product.id === productId);
+
+    if (productToAdd) {
+        userData.users.wishlist.push(productToAdd);
+        saveWishlist();
+        displayWishlist();
+        generateRecommendations();
+        showSuccessAlert(`${productTitle} added to wishlist!`);
+        animateHeartIcon();
+    }
+}
+
+// Remove from wishlist
 function removeFromWishlist(productId, productTitle) {
     Swal.fire({
         title: 'Are you sure?',
@@ -353,11 +273,41 @@ function removeFromWishlist(productId, productTitle) {
     });
 }
 
-// Animate heart icon in header
+// Animate heart icon
 function animateHeartIcon() {
+    if (!headerWishlist) return;
     const heart = headerWishlist.querySelector('i');
+    if (!heart) return;
     heart.classList.add('animate');
     setTimeout(() => {
         heart.classList.remove('animate');
     }, 1000);
+}
+
+// Alerts
+function showSuccessAlert(message) {
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: message,
+        confirmButtonColor: '#000',
+        timer: 2000
+    });
+}
+function showErrorAlert(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message,
+        confirmButtonColor: '#e63946'
+    });
+}
+function showInfoAlert(message) {
+    Swal.fire({
+        icon: 'info',
+        title: 'Info',
+        text: message,
+        confirmButtonColor: '#0d6efd',
+        timer: 2000
+    });
 }
