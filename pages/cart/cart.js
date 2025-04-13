@@ -185,10 +185,10 @@ function deleteItem(event) {
     let price = parseFloat(
       row.querySelector(".price").textContent.replace("$", "")
     );
-    console.log("Deleting item ID:", itemId);
+   // console.log("Deleting item ID:", itemId);
 
     if (quantity > 1) {
-      // Decrease quantity and update subtotal
+      
       quantityInput.value = quantity - 1;
       let subtotal = price * (quantity - 1);
       quantity--;
@@ -199,7 +199,7 @@ function deleteItem(event) {
       recalculateCartTotal();
       return;
     } else {
-      // Remove row if quantity is 1
+      
       let subtotal = parseFloat(
         row.querySelector(".subtotal").textContent.replace("$", "")
       );
