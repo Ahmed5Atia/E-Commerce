@@ -1,11 +1,8 @@
 // DOM Elements
 const wishlistContainer = document.getElementById("wishlistContainer");
-const recommendationsContainer = document.getElementById(
-  "recommendationsContainer"
-);
+const recommendationsContainer = document.getElementById("recommendationsContainer");
 const wishlistCount = document.getElementById("wishlistCount");
 const itemCount = document.getElementById("itemCount");
-const searchInput = document.getElementById("searchInput");
 const seeAllLink = document.getElementById("seeAllLink");
 const headerWishlist = document.getElementById("headerWishlist");
 const headerWishlistCount = document.getElementById("headerWishlistCount");
@@ -15,53 +12,53 @@ let currentUser = JSON.parse(sessionStorage.getItem("currentUser")) || null;
 let allProducts = [];
 let recommendations = [];
 
-// Load userData based on currentUser
-function loadUserData() {
-  return new Promise((resolve) => {
-    if (!currentUser) {
-      const jsonxml = new XMLHttpRequest();
-      jsonxml.open("GET", "../../project.JSON", true);
-      jsonxml.send();
-      jsonxml.addEventListener("loadend", () => {
-        if (jsonxml.status === 200) {
-          const response = JSON.parse(jsonxml.response);
-          userData = response.users[0] || { wishlist: [] };
-          if (!userData.wishlist) userData.wishlist = [];
-        } else {
-          userData = { wishlist: [] };
-        }
-        resolve();
-      });
-    } else {
-      const currentUsers = JSON.parse(localStorage.getItem("users")) || [];
-      userData = currentUsers.find(
-        (u) => currentUser === u.userName || currentUser === u.email
-      ) || { wishlist: [] };
-      if (!userData.wishlist) userData.wishlist = [];
-      resolve();
-    }
-  });
+// Load userData based on currentUser using a callback
+function loadUserData(callback) {
+  if (!currentUser) {
+    const jsonxml = new XMLHttpRequest();
+    jsonxml.open("GET", "../../project.JSON", true);
+    jsonxml.send();
+    jsonxml.addEventListener("loadend", () => {
+      if (jsonxml.status === 200) {
+        const response = JSON.parse(jsonxml.response);
+        userData = response.users[0] || { wishlist: [] };
+        if (!userData.wishlist) userData.wishlist = [];
+      } else {
+        userData = { wishlist: [] };
+      }
+      callback();
+    });
+  } else {
+    const currentUsers = JSON.parse(localStorage.getItem("users")) || [];
+    userData = currentUsers.find(
+      (u) => currentUser === u.userName || currentUser === u.email
+    ) || { wishlist: [] };
+    if (!userData.wishlist) userData.wishlist = [];
+    callback();
+  }
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadUserData();
-  updateWishlistCount();
-  fetchProducts();
+// Initialize the page when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  loadUserData(() => {
+    updateWishlistCount();
+    fetchProducts();
 
-  if (seeAllLink) {
-    seeAllLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      displayAllProducts();
-    });
-  }
+    if (seeAllLink) {
+      seeAllLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        displayAllProducts();
+      });
+    }
 
-  if (headerWishlist) {
-    headerWishlist.addEventListener("click", () => {
-      document
-        .querySelector(".wishlist-header")
-        ?.scrollIntoView({ behavior: "smooth" });
-    });
-  }
+    if (headerWishlist) {
+      headerWishlist.addEventListener("click", () => {
+        document
+          .querySelector(".wishlist-header")
+          ?.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+  });
 });
 
 function loadWishlist() {
@@ -132,26 +129,25 @@ function fetchProducts() {
   xhr.send();
 }
 
-function fetchProductById(productId) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", `https://dummyjson.com/products/${productId}`);
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        let product = JSON.parse(xhr.responseText);
-        if (product.thumbnail && !product.thumbnail.startsWith("http")) {
-          product.thumbnail = `https://dummyjson.com${product.thumbnail}`;
-        }
-        resolve(product);
-      } else {
-        reject(new Error("Product not found"));
+// Fetch a single product by ID using callbacks
+function fetchProductById(productId, callback, errorCallback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", `https://dummyjson.com/products/${productId}`);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      let product = JSON.parse(xhr.responseText);
+      if (product.thumbnail && !product.thumbnail.startsWith("http")) {
+        product.thumbnail = `https://dummyjson.com${product.thumbnail}`;
       }
-    };
-    xhr.onerror = function () {
-      reject(new Error("Network error"));
-    };
-    xhr.send();
-  });
+      callback(product);
+    } else {
+      errorCallback(new Error("Product not found"));
+    }
+  };
+  xhr.onerror = function () {
+    errorCallback(new Error("Network error"));
+  };
+  xhr.send();
 }
 
 function displayWishlist() {
@@ -168,16 +164,18 @@ function displayWishlist() {
     if (product) {
       renderProductCard(product, wishlistContainer, true);
     } else {
-      fetchProductById(id)
-        .then((fetchedProduct) => {
+      fetchProductById(
+        id,
+        (fetchedProduct) => {
           allProducts.push(fetchedProduct);
           renderProductCard(fetchedProduct, wishlistContainer, true);
-        })
-        .catch((error) => {
+        },
+        (error) => {
           console.error("Failed to fetch product with ID", id, error);
           userData.wishlist = userData.wishlist.filter((pid) => pid !== id);
           saveWishlist();
-        });
+        }
+      );
     }
   });
 }
@@ -192,14 +190,8 @@ function renderProductCard(product, container, isWishlist = false) {
   productElement.innerHTML = `
     <div class="item-heart" onclick="${
       isWishlist
-        ? `removeFromWishlist(${product.id}, '${product.title.replace(
-            /'/g,
-            "\\'"
-          )}')`
-        : `addToWishlist(${product.id}, '${product.title.replace(
-            /'/g,
-            "\\'"
-          )}')`
+        ? `removeFromWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')`
+        : `addToWishlist(${product.id}, '${product.title.replace(/'/g, "\\'")}')`
     }">
       <i class="fas fa-heart"></i>
     </div>
@@ -235,9 +227,7 @@ function renderProductCard(product, container, isWishlist = false) {
         userFound.cart.push(productId);
         localStorage.setItem("users", JSON.stringify(users));
         window.updateNavCartCount();
-        showSuccessAlert(
-          "The product has been successfully added to the cart!"
-        );
+        showSuccessAlert("The product has been successfully added to the cart!");
       } else {
         showInfoAlert("This product is already in the cart!");
       }
