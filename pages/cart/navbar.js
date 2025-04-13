@@ -103,6 +103,7 @@ window.updateNavWatchlistCount = function () {
 
 function handleLogOut() {
   sessionStorage.clear();
+  location.reload();
 }
 //alerts =========================
 
